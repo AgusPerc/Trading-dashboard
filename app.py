@@ -1,204 +1,334 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-from pytz import timezone
-import requests
-import datetime
+from datetime import datetime
+import json
+from fpdf import FPDF
+import matplotlib.pyplot as plt
+import seaborn as sns
+import io
+import base64
+from matplotlib.gridspec import GridSpec
+import tempfile
+import os
 
-# Set page config
+# Set page configuration
 st.set_page_config(page_title="Trading Dashboard", layout="wide")
 
-# Function to calculate VWAP (unchanged)
-def calculate_vwap(df):
-    df = df.copy()
-    df['typical_price'] = (df['High'] + df['Low'] + df['Close']) / 3
-    df['cum_vol'] = df['Volume'].cumsum()
-    df['cum_vp'] = (df['typical_price'] * df['Volume']).cumsum()
-    df['VWAP'] = df['cum_vp'] / df['cum_vol']
-    return df
-
-# Modified fetch_minute_data function with API key as parameter
-def fetch_minute_data(ticker, date, api_key):
-    url = f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/1/minute/{date}/{date}"
-    params = {'apiKey': api_key}
-    
-    response = requests.get(url, params=params)
-    
-    if response.status_code == 200:
-        data = response.json()
-        if 'results' in data:
-            ohlc_df = pd.DataFrame(data['results'])
-            ohlc_df['timestamp'] = pd.to_datetime(ohlc_df['t'], unit='ms')
-            ohlc_df.set_index('timestamp', inplace=True)
-            ohlc_df.index = ohlc_df.index.tz_localize('UTC')
-            eastern = timezone('America/New_York')
-            ohlc_df.index = ohlc_df.index.tz_convert(eastern)
-            
-            ohlc_df.rename(columns={
-                'o': 'Open', 'h': 'High', 'l': 'Low',
-                'c': 'Close', 'v': 'Volume'
-            }, inplace=True)
-            
-            return calculate_vwap(ohlc_df[['Open', 'High', 'Low', 'Close', 'Volume']])
-    return pd.DataFrame()
-
-# Modified backtest function
-def short_backtest(ticker, date, portfolio_value, api_key):
-    df = fetch_minute_data(ticker, date, api_key)
-    
-    if df.empty:
-        return None, None, None, None
-    
-    short_time = df.between_time('9:35', '9:45')
-    if short_time.empty:
-        return None, None, None, None
-    
-    open_price = short_time.iloc[0]['Open']
-    stop_loss_price = open_price * 1.15
-    risk_per_share = stop_loss_price - open_price
-    num_shares = 6000 / risk_per_share
-    shares_short_30 = num_shares * 0.3
-    
-    df_after_open = df.between_time('9:35', '16:00')
-    remaining_shares_shorted = False
-    shares_short_70 = 0
-    
-    for index, row in df_after_open.iterrows():
-        if not remaining_shares_shorted and row['Close'] < row['VWAP']:
-            shares_short_70 = num_shares * 0.7
-            remaining_shares_shorted = True
+class DashboardPDF(FPDF):
+    def __init__(self):
+        super().__init__()
+        self.set_auto_page_break(auto=True, margin=15)
         
-        if row['High'] >= stop_loss_price:
-            close_price = stop_loss_price
-            return_pct = (open_price - close_price) / open_price * 100
-            profit_loss = -6000
-            return open_price, close_price, return_pct, profit_loss
-    
-    cover_time_end = df.between_time('15:59', '16:00')
-    if cover_time_end.empty:
-        return None, None, None, None
-    
-    close_price = cover_time_end.iloc[0]['Close']
-    return_pct = (open_price - close_price) / open_price * 100
-    profit_loss = (shares_short_30 + shares_short_70) * (open_price - close_price)
-    
-    return open_price, close_price, return_pct, profit_loss
+    def header(self):
+        # Modern header with background color
+        self.set_fill_color(47, 73, 95)  # Dark blue background
+        self.rect(0, 0, 210, 20, 'F')
+        self.set_font('Arial', 'B', 15)
+        self.set_text_color(255, 255, 255)  # White text
+        self.cell(0, 20, 'Trading Performance Dashboard', 0, 1, 'C', True)
+        self.ln(5)
 
-def calculate_max_drawdown(portfolio_values):
-    cummax = pd.Series(portfolio_values).cummax()
-    drawdown = (pd.Series(portfolio_values) - cummax) / cummax
-    return drawdown.min()
+    def footer(self):
+        self.set_y(-15)
+        self.set_font('Arial', 'I', 8)
+        self.set_text_color(128, 128, 128)  # Gray text
+        self.cell(0, 10, f'Generated on {datetime.now().strftime("%Y-%m-%d %H:%M")} | Page {self.page_no()}', 0, 0, 'C')
 
-# Streamlit app
-def main():
-    st.title("Trading Strategy Dashboard")
-    
-    # Sidebar for inputs
-    st.sidebar.header("Configuration")
-    api_key = st.sidebar.text_input("Enter Polygon.io API Key", type="password")
-    uploaded_file = st.sidebar.file_uploader("Upload CSV file", type="csv")
-    initial_portfolio = st.sidebar.number_input("Initial Portfolio Value ($)", value=20000)
-    
-    if uploaded_file and api_key:
-        df_filtered_stocks = pd.read_csv(uploaded_file)
+    def add_metric_box(self, title, value, delta=None):
+        self.set_fill_color(245, 245, 245)  # Light gray background
+        self.rect(self.get_x(), self.get_y(), 60, 25, 'F')
+        self.set_font('Arial', 'B', 10)
+        self.set_text_color(70, 70, 70)
+        self.cell(60, 10, title, 0, 2, 'L')
+        self.set_font('Arial', 'B', 12)
+        self.set_text_color(0, 0, 0)
+        value_text = f"${value:,.2f}"
+        self.cell(60, 8, value_text, 0, 1, 'L')
+        if delta:
+            self.set_font('Arial', '', 10)
+            color = (0, 150, 0) if delta >= 0 else (150, 0, 0)
+            self.set_text_color(*color)
+            self.cell(60, 8, f"({delta:+.2f}%)", 0, 1, 'L')
+        self.ln(5)
+
+    def add_table(self, headers, data, title):
+        self.set_font('Arial', 'B', 12)
+        self.set_text_color(47, 73, 95)
+        self.cell(0, 10, title, 0, 1, 'L')
+        self.ln(2)
         
-        # Initialize tracking variables
-        portfolio_value = initial_portfolio
-        trades = []
-        wins = losses = total_profit = total_loss = 0
-        portfolio_values = [portfolio_value]
+        # Calculate column widths
+        col_widths = [40] * len(headers)
         
-        # Progress bar
-        progress_bar = st.progress(0)
-        status_text = st.empty()
+        # Table header
+        self.set_font('Arial', 'B', 10)
+        self.set_fill_color(47, 73, 95)
+        self.set_text_color(255, 255, 255)
+        for i, header in enumerate(headers):
+            self.cell(col_widths[i], 8, header, 1, 0, 'C', True)
+        self.ln()
         
-        # Process each trade
-        for idx, row in df_filtered_stocks.iterrows():
-            progress = (idx + 1) / len(df_filtered_stocks)
-            progress_bar.progress(progress)
-            status_text.text(f"Processing trade {idx + 1} of {len(df_filtered_stocks)}")
-            
-            ticker = row['ticker']
-            date = row['date']
-            results = short_backtest(ticker, date, portfolio_value, api_key)
-            
-            if all(v is not None for v in results):
-                open_price, close_price, return_pct, profit_loss = results
-                portfolio_value += profit_loss
-                portfolio_values.append(portfolio_value)
-                
-                if profit_loss > 0:
-                    wins += 1
-                    total_profit += profit_loss
+        # Table data
+        self.set_font('Arial', '', 9)
+        self.set_text_color(0, 0, 0)
+        for row in data:
+            for i, item in enumerate(row):
+                if isinstance(item, (int, float)):
+                    text = f"${item:,.2f}" if i == len(row)-1 else f"{item:,.2f}"
                 else:
-                    losses += 1
-                    total_loss += profit_loss
-                
-                trades.append({
-                    'ticker': ticker,
-                    'date': date,
-                    'open_price': open_price,
-                    'close_price': close_price,
-                    'return_pct': return_pct,
-                    'profit_loss': profit_loss,
-                    'portfolio_value': portfolio_value
-                })
-        
-        # Clear progress indicators
-        progress_bar.empty()
-        status_text.empty()
-        
-        if trades:
-            df_trades = pd.DataFrame(trades)
-            
-            # Calculate metrics
-            max_drawdown = calculate_max_drawdown(portfolio_values)
-            total_trades = wins + losses
-            expected_value = (total_profit + total_loss) / total_trades if total_trades > 0 else 0
-            win_loss_ratio = wins / losses if losses > 0 else wins
-            avg_profit = total_profit / wins if wins > 0 else 0
-            avg_loss = total_loss / losses if losses > 0 else 0
-            risk_reward_ratio = avg_profit / abs(avg_loss) if avg_loss != 0 else 0
-            
-            # Display metrics in columns
-            col1, col2, col3, col4 = st.columns(4)
-            with col1:
-                st.metric("Max Drawdown", f"{max_drawdown * 100:.2f}%")
-            with col2:
-                st.metric("Expected Value", f"${expected_value:.2f}")
-            with col3:
-                st.metric("Win-Loss Ratio", f"{win_loss_ratio:.2f}")
-            with col4:
-                st.metric("Risk-Reward Ratio", f"{risk_reward_ratio:.2f}")
-            
-            # Portfolio value chart
-            st.subheader("Portfolio Value Over Time")
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(
-                x=df_trades['date'],
-                y=df_trades['portfolio_value'],
-                mode='lines+markers',
-                name='Portfolio Value'
-            ))
-            fig.update_layout(
-                xaxis_title="Date",
-                yaxis_title="Portfolio Value ($)",
-                height=600
-            )
-            st.plotly_chart(fig, use_container_width=True)
-            
-            # Trade results table
-            st.subheader("Trade Results")
-            st.dataframe(df_trades)
-            
-            # Download results button
-            csv = df_trades.to_csv(index=False)
-            st.download_button(
-                label="Download Results CSV",
-                data=csv,
-                file_name="backtest_results.csv",
-                mime="text/csv"
-            )
+                    text = str(item)
+                self.cell(col_widths[i], 7, text, 1, 0, 'C')
+            self.ln()
+        self.ln(5)
 
-if __name__ == "__main__":
-    main()
+def create_pnl_chart(trades_df):
+    plt.figure(figsize=(10, 4))
+    daily_pnl = trades_df.groupby('date')['realized'].sum().cumsum()
+    
+    plt.plot(daily_pnl.index, daily_pnl.values, marker='o', linewidth=2, color='#2E4B5F')
+    plt.fill_between(daily_pnl.index, daily_pnl.values, alpha=0.2, color='#2E4B5F')
+    
+    plt.title('Cumulative P&L Over Time', fontsize=12, pad=15)
+    plt.xlabel('Date', fontsize=10)
+    plt.ylabel('Cumulative P&L ($)', fontsize=10)
+    plt.grid(True, alpha=0.3)
+    plt.xticks(rotation=45)
+    
+    # Save plot to temporary file instead of buffer
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as tmp_file:
+        plt.savefig(tmp_file.name, format='png', dpi=300, bbox_inches='tight')
+        plt.close()
+        return tmp_file.name
+
+def create_dashboard_pdf(data):
+    pdf = DashboardPDF()
+    pdf.add_page()
+    
+    # Calculate summary statistics
+    starting_balance = data.get('starting_balance', 50000)
+    total_realized = sum(trade['realized'] for trade in data['trades'])
+    total_locate_cost = sum(locate['totalCost'] for locate in data['locates'])
+    net_pnl = total_realized - total_locate_cost
+    ending_balance = starting_balance + net_pnl
+    return_percent = (net_pnl / starting_balance) * 100 if starting_balance else 0
+    
+    # Add metrics section
+    pdf.add_metric_box("Starting Balance", starting_balance)
+    pdf.set_x(75)
+    pdf.set_y(pdf.get_y() - 30)
+    pdf.add_metric_box("Net P&L", net_pnl, return_percent)
+    pdf.set_x(140)
+    pdf.set_y(pdf.get_y() - 30)
+    pdf.add_metric_box("Ending Balance", ending_balance)
+    pdf.ln(10)
+    
+    # Add P&L chart if there are trades
+    if data['trades']:
+        trades_df = pd.DataFrame(data['trades'])
+        trades_df['date'] = pd.to_datetime(trades_df['date'])
+        
+        # Create and add the P&L chart
+        chart_path = create_pnl_chart(trades_df)
+        try:
+            pdf.image(chart_path, x=10, y=None, w=190)
+            pdf.ln(10)
+        finally:
+            # Clean up temporary file
+            if os.path.exists(chart_path):
+                os.unlink(chart_path)
+        
+        # Add trades summary
+        trades_data = [
+            [trade['date'], trade['symbol'], trade['type'], trade['realized']]
+            for trade in sorted(data['trades'], key=lambda x: x['date'], reverse=True)
+        ]
+        pdf.add_table(
+            ['Date', 'Symbol', 'Type', 'P&L'],
+            trades_data,
+            'Trades Summary'
+        )
+    
+    # Add new page for locates if needed
+    if len(data['trades']) > 5:
+        pdf.add_page()
+    
+    # Add locates summary
+    if data['locates']:
+        locates_data = [
+            [locate['date'], locate['symbol'], locate['totalCost']]
+            for locate in sorted(data['locates'], key=lambda x: x['date'], reverse=True)
+        ]
+        pdf.add_table(
+            ['Date', 'Symbol', 'Cost'],
+            locates_data,
+            'Locates Summary'
+        )
+    
+    # Add daily summary
+    if data['trades']:
+        daily_summary = trades_df.groupby('date')['realized'].sum()
+        daily_data = [
+            [date.strftime('%Y-%m-%d'), pnl]
+            for date, pnl in daily_summary.items()
+        ]
+        pdf.add_table(
+            ['Date', 'Daily P&L'],
+            daily_data,
+            'Daily Summary'
+        )
+    
+    return pdf.output(dest='S').encode('latin-1')
+
+# Function to load data from JSON file
+def load_data():
+    try:
+        with open('trading_data.json', 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {
+            'trades': [],
+            'locates': [],
+            'starting_balance': 50000
+        }
+
+# Function to save data to JSON file
+def save_data(data):
+    with open('trading_data.json', 'w') as f:
+        json.dump(data, f, indent=4)
+
+# Load existing data
+data = load_data()
+
+# Sidebar for adding new entries
+st.sidebar.title("Add New Data")
+
+# Add new trade
+st.sidebar.subheader("Add New Trade")
+trade_symbol = st.sidebar.text_input("Symbol (Trade)")
+trade_type = st.sidebar.selectbox("Type", ["Long", "Short"])
+trade_realized = st.sidebar.number_input("Realized P&L")
+
+if st.sidebar.button("Add Trade"):
+    new_trade = {
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "symbol": trade_symbol,
+        "type": trade_type,
+        "realized": trade_realized
+    }
+    data['trades'].append(new_trade)
+    save_data(data)
+    st.sidebar.success("Trade added successfully!")
+
+# Add new locate
+st.sidebar.subheader("Add New Locate")
+locate_symbol = st.sidebar.text_input("Symbol (Locate)")
+locate_total_cost = st.sidebar.number_input("Total Cost", min_value=0.0)
+
+if st.sidebar.button("Add Locate"):
+    new_locate = {
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "symbol": locate_symbol,
+        "totalCost": locate_total_cost
+    }
+    data['locates'].append(new_locate)
+    save_data(data)
+    st.sidebar.success("Locate added successfully!")
+
+# Main dashboard
+st.title("Trading Dashboard")
+
+# Calculate summary statistics
+starting_balance = data.get('starting_balance', 50000)
+total_realized = sum(trade['realized'] for trade in data['trades'])
+total_locate_cost = sum(locate['totalCost'] for locate in data['locates'])
+net_pnl = total_realized - total_locate_cost
+ending_balance = starting_balance + net_pnl
+return_percent = (net_pnl / starting_balance) * 100 if starting_balance else 0
+
+# Summary metrics
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric("Starting Balance", f"${starting_balance:,.2f}")
+with col2:
+    st.metric("Net P&L", f"${net_pnl:,.2f}", f"{return_percent:.2f}%")
+with col3:
+    st.metric("Ending Balance", f"${ending_balance:,.2f}")
+
+# Trades table
+st.subheader("Trades Summary")
+if data['trades']:
+    trades_df = pd.DataFrame(data['trades'])
+    trades_df = trades_df.sort_values('date', ascending=False)
+    st.dataframe(trades_df[['date', 'symbol', 'type', 'realized']], use_container_width=True)
+else:
+    st.info("No trades recorded yet")
+
+# Locates table
+st.subheader("Locates Summary")
+if data['locates']:
+    locates_df = pd.DataFrame(data['locates'])
+    locates_df = locates_df.sort_values('date', ascending=False)
+    st.dataframe(locates_df[['date', 'symbol', 'totalCost']], use_container_width=True)
+else:
+    st.info("No locates recorded yet")
+
+# P&L Chart
+if data['trades']:
+    trades_df = pd.DataFrame(data['trades'])
+    trades_df['date'] = pd.to_datetime(trades_df['date'])
+    daily_pnl = trades_df.groupby('date')['realized'].sum().cumsum()
+    
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=daily_pnl.index,
+        y=daily_pnl.values,
+        mode='lines+markers',
+        name='Cumulative P&L'
+    ))
+    
+    fig.update_layout(
+        title='Cumulative P&L Over Time',
+        xaxis_title='Date',
+        yaxis_title='Cumulative P&L ($)',
+        height=400
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+
+# Add daily summary
+st.subheader("Daily Summary")
+if data['trades']:
+    trades_df = pd.DataFrame(data['trades'])
+    trades_df['date'] = pd.to_datetime(trades_df['date'])
+    daily_summary = trades_df.groupby('date')['realized'].sum()
+    
+    st.dataframe(daily_summary.sort_index(ascending=False), use_container_width=True)
+
+# Add PDF export button
+if data['trades'] or data['locates']:
+    st.subheader("Export Report")
+    
+if st.button("Generate PDF Report"):
+    try:
+        pdf_bytes = create_dashboard_pdf(data)
+        
+        # Create download button
+        pdf_filename = f"trading_dashboard_{datetime.now().strftime('%Y%m%d')}.pdf"
+        st.download_button(
+            label="Download PDF Report",
+            data=pdf_bytes,
+            file_name=pdf_filename,
+            mime="application/pdf"
+        )
+        st.success("PDF report generated successfully!")
+    except Exception as e:
+        st.error(f"Error generating PDF: {str(e)}")
+
+# Add delete functionality
+st.subheader("Delete Records")
+if st.button("Delete All Data"):
+    if st.checkbox("Are you sure you want to delete all data?"):
+        data = {'trades': [], 'locates': [], 'starting_balance': 50000}
+        save_data(data)
+        st.success("All data has been deleted!")
