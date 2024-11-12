@@ -1,5 +1,6 @@
-streamlit
-pandas
-plotly
-pytz
-requests
+streamlit==1.31.0
+pandas==2.2.0
+plotly==5.18.0
+fpdf==1.7.2
+matplotlib==3.8.2
+seaborn==0.13.2
