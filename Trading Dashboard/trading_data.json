@@ -1,0 +1,45 @@
+{
+    "trades": [
+        {
+            "date": "2024-11-11",
+            "symbol": "CERO",
+            "type": "Short",
+            "realized": -801.95
+        },
+        {
+            "date": "2024-11-11",
+            "symbol": "HOVR",
+            "type": "Short",
+            "realized": -732.59
+        },
+        {
+            "date": "2024-11-11",
+            "symbol": "SGN",
+            "type": "Short",
+            "realized": -391.59
+        }
+    ],
+    "locates": [
+        {
+            "date": "2024-11-11",
+            "symbol": "PWM",
+            "totalCost": 48.93
+        },
+        {
+            "date": "2024-11-11",
+            "symbol": "HOVR",
+            "totalCost": 9.4
+        },
+        {
+            "date": "2024-11-11",
+            "symbol": "CERO",
+            "totalCost": 13.3968
+        },
+        {
+            "date": "2024-11-11",
+            "symbol": "SGN",
+            "totalCost": 12.0
+        }
+    ],
+    "starting_balance": 50000
+}
