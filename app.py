@@ -324,11 +324,3 @@ if st.button("Generate PDF Report"):
         st.success("PDF report generated successfully!")
     except Exception as e:
         st.error(f"Error generating PDF: {str(e)}")
-
-# Add delete functionality
-st.subheader("Delete Records")
-if st.button("Delete All Data"):
-    if st.checkbox("Are you sure you want to delete all data?"):
-        data = {'trades': [], 'locates': [], 'starting_balance': 50000}
-        save_data(data)
-        st.success("All data has been deleted!")
