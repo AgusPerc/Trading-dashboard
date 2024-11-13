@@ -105,7 +105,7 @@ def create_dashboard_pdf(data):
     pdf = DashboardPDF()
     pdf.add_page()
     
-    # Calculate summary statistics
+    # Calculate summary statistics including daily P&L
     starting_balance = data.get('starting_balance', 50000)
     total_realized = sum(trade['realized'] for trade in data['trades'])
     total_locate_cost = sum(locate['totalCost'] for locate in data['locates'])
@@ -113,13 +113,31 @@ def create_dashboard_pdf(data):
     ending_balance = starting_balance + net_pnl
     return_percent = (net_pnl / starting_balance) * 100 if starting_balance else 0
     
-    # Add metrics section
+    # Calculate daily P&L for PDF
+    if data['trades']:
+        trades_df = pd.DataFrame(data['trades'])
+        trades_df['date'] = pd.to_datetime(trades_df['date'])
+        today_str = datetime.now().strftime("%Y-%m-%d")
+        daily_pnl = trades_df[trades_df['date'] == today_str]['realized'].sum()
+        
+        if data['locates']:
+            locates_df = pd.DataFrame(data['locates'])
+            locates_df['date'] = pd.to_datetime(locates_df['date'])
+            daily_locate_cost = locates_df[locates_df['date'] == today_str]['totalCost'].sum()
+            daily_pnl -= daily_locate_cost
+    else:
+        daily_pnl = 0.0
+    
+    # Add metrics section with daily P&L
     pdf.add_metric_box("Starting Balance", starting_balance)
     pdf.set_x(75)
     pdf.set_y(pdf.get_y() - 30)
-    pdf.add_metric_box("Net P&L", net_pnl, return_percent)
+    pdf.add_metric_box("Daily P&L", daily_pnl)
     pdf.set_x(140)
     pdf.set_y(pdf.get_y() - 30)
+    pdf.add_metric_box("Net P&L", net_pnl, return_percent)
+    pdf.set_x(10)
+    pdf.set_y(pdf.get_y() + 30)
     pdf.add_metric_box("Ending Balance", ending_balance)
     pdf.ln(10)
     
@@ -167,6 +185,8 @@ def create_dashboard_pdf(data):
     
     # Add daily summary
     if data['trades']:
+        trades_df = pd.DataFrame(data['trades'])
+        trades_df['date'] = pd.to_datetime(trades_df['date'])
         daily_summary = trades_df.groupby('date')['realized'].sum()
         daily_data = [
             [date.strftime('%Y-%m-%d'), pnl]
@@ -197,127 +217,43 @@ def save_data(data):
     with open('trading_data.json', 'w') as f:
         json.dump(data, f, indent=4)
 
-# Initialize session state for editing
-if 'editing_trade_index' not in st.session_state:
-    st.session_state.editing_trade_index = None
-if 'editing_locate_index' not in st.session_state:
-    st.session_state.editing_locate_index = None
-
 # Load existing data
 data = load_data()
 
-# Sidebar for adding/editing entries
-st.sidebar.title("Add/Edit Data")
+# Sidebar for adding new entries
+st.sidebar.title("Add New Trade")
 
-# Function to edit trade
-def edit_trade(index):
-    st.session_state.editing_trade_index = index
+# Combined trade and locate input
+trade_date = st.sidebar.date_input("Date", datetime.now())
+trade_symbol = st.sidebar.text_input("Symbol")
+trade_type = st.sidebar.selectbox("Type", ["Long", "Short"])
+trade_realized = st.sidebar.number_input("Realized P&L")
+locate_cost = st.sidebar.number_input("Locate Cost", min_value=0.0)
 
-# Function to edit locate
-def edit_locate(index):
-    st.session_state.editing_locate_index = index
-
-# Function to delete trade
-def delete_trade(index):
-    if index < len(data['trades']):
-        data['trades'].pop(index)
-        save_data(data)
-        st.success("Trade deleted successfully!")
-        st.rerun()
-
-# Function to delete locate
-def delete_locate(index):
-    if index < len(data['locates']):
-        data['locates'].pop(index)
-        save_data(data)
-        st.success("Locate deleted successfully!")
-        st.rerun()
-
-# Add/Edit trade form
-st.sidebar.subheader("Add/Edit Trade")
-if st.session_state.editing_trade_index is not None:
-    trade = data['trades'][st.session_state.editing_trade_index]
-    trade_date = st.sidebar.date_input("Date", datetime.strptime(trade['date'], "%Y-%m-%d"))
-    trade_symbol = st.sidebar.text_input("Symbol (Trade)", value=trade['symbol'])
-    trade_type = st.sidebar.selectbox("Type", ["Long", "Short"], index=0 if trade['type'] == "Long" else 1)
-    trade_realized = st.sidebar.number_input("Realized P&L", value=float(trade['realized']))
+if st.sidebar.button("Add Trade"):
+    # Format date as string
+    date_str = trade_date.strftime("%Y-%m-%d")
     
-    col1, col2 = st.sidebar.columns(2)
-    with col1:
-        if st.button("Update Trade"):
-            data['trades'][st.session_state.editing_trade_index] = {
-                "date": trade_date.strftime("%Y-%m-%d"),
-                "symbol": trade_symbol,
-                "type": trade_type,
-                "realized": trade_realized
-            }
-            save_data(data)
-            st.session_state.editing_trade_index = None
-            st.success("Trade updated successfully!")
-            st.rerun()
+    # Add trade
+    new_trade = {
+        "date": date_str,
+        "symbol": trade_symbol,
+        "type": trade_type,
+        "realized": trade_realized
+    }
+    data['trades'].append(new_trade)
     
-    with col2:
-        if st.button("Cancel Edit"):
-            st.session_state.editing_trade_index = None
-            st.rerun()
-else:
-    trade_date = st.sidebar.date_input("Date", datetime.now())
-    trade_symbol = st.sidebar.text_input("Symbol (Trade)")
-    trade_type = st.sidebar.selectbox("Type", ["Long", "Short"])
-    trade_realized = st.sidebar.number_input("Realized P&L")
-    
-    if st.sidebar.button("Add Trade"):
-        new_trade = {
-            "date": trade_date.strftime("%Y-%m-%d"),
-            "symbol": trade_symbol,
-            "type": trade_type,
-            "realized": trade_realized
-        }
-        data['trades'].append(new_trade)
-        save_data(data)
-        st.sidebar.success("Trade added successfully!")
-        st.rerun()
-
-# Add/Edit locate form
-st.sidebar.subheader("Add/Edit Locate")
-if st.session_state.editing_locate_index is not None:
-    locate = data['locates'][st.session_state.editing_locate_index]
-    locate_date = st.sidebar.date_input("Date (Locate)", datetime.strptime(locate['date'], "%Y-%m-%d"))
-    locate_symbol = st.sidebar.text_input("Symbol (Locate)", value=locate['symbol'])
-    locate_total_cost = st.sidebar.number_input("Total Cost", min_value=0.0, value=float(locate['totalCost']))
-    
-    col1, col2 = st.sidebar.columns(2)
-    with col1:
-        if st.button("Update Locate"):
-            data['locates'][st.session_state.editing_locate_index] = {
-                "date": locate_date.strftime("%Y-%m-%d"),
-                "symbol": locate_symbol,
-                "totalCost": locate_total_cost
-            }
-            save_data(data)
-            st.session_state.editing_locate_index = None
-            st.success("Locate updated successfully!")
-            st.rerun()
-    
-    with col2:
-        if st.button("Cancel Edit"):
-            st.session_state.editing_locate_index = None
-            st.rerun()
-else:
-    locate_date = st.sidebar.date_input("Date (Locate)", datetime.now())
-    locate_symbol = st.sidebar.text_input("Symbol (Locate)")
-    locate_total_cost = st.sidebar.number_input("Total Cost", min_value=0.0)
-    
-    if st.sidebar.button("Add Locate"):
+    # Add locate if cost > 0
+    if locate_cost > 0:
         new_locate = {
-            "date": locate_date.strftime("%Y-%m-%d"),
-            "symbol": locate_symbol,
-            "totalCost": locate_total_cost
+            "date": date_str,
+            "symbol": trade_symbol,
+            "totalCost": locate_cost
         }
         data['locates'].append(new_locate)
-        save_data(data)
-        st.sidebar.success("Locate added successfully!")
-        st.rerun()
+    
+    save_data(data)
+    st.sidebar.success("Trade data added successfully!")
 
 # Main dashboard
 st.title("Trading Dashboard")
@@ -330,62 +266,48 @@ net_pnl = total_realized - total_locate_cost
 ending_balance = starting_balance + net_pnl
 return_percent = (net_pnl / starting_balance) * 100 if starting_balance else 0
 
+# Calculate daily P&L
+if data['trades']:
+    trades_df = pd.DataFrame(data['trades'])
+    trades_df['date'] = pd.to_datetime(trades_df['date'])
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    daily_pnl = trades_df[trades_df['date'] == today_str]['realized'].sum()
+    
+    # Subtract today's locate costs
+    if data['locates']:
+        locates_df = pd.DataFrame(data['locates'])
+        locates_df['date'] = pd.to_datetime(locates_df['date'])
+        daily_locate_cost = locates_df[locates_df['date'] == today_str]['totalCost'].sum()
+        daily_pnl -= daily_locate_cost
+else:
+    daily_pnl = 0.0
+
 # Summary metrics
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.metric("Starting Balance", f"${starting_balance:,.2f}")
 with col2:
-    st.metric("Net P&L", f"${net_pnl:,.2f}", f"{return_percent:.2f}%")
+    st.metric("Daily P&L", f"${daily_pnl:,.2f}")
 with col3:
+    st.metric("Net P&L", f"${net_pnl:,.2f}", f"{return_percent:.2f}%")
+with col4:
     st.metric("Ending Balance", f"${ending_balance:,.2f}")
 
-# Trades table with edit and delete buttons
+# Trades table
 st.subheader("Trades Summary")
 if data['trades']:
     trades_df = pd.DataFrame(data['trades'])
     trades_df = trades_df.sort_values('date', ascending=False)
-    
-# Display trades with edit and delete buttons
-    for index, trade in trades_df.iterrows():
-        col1, col2, col3, col4, col5, col6 = st.columns([2, 2, 2, 2, 1, 1])
-        with col1:
-            st.write(trade['date'])
-        with col2:
-            st.write(trade['symbol'])
-        with col3:
-            st.write(trade['type'])
-        with col4:
-            st.write(f"${trade['realized']:,.2f}")
-        with col5:
-            if st.button("Edit", key=f"edit_trade_{index}"):
-                edit_trade(index)
-        with col6:
-            if st.button("Delete", key=f"delete_trade_{index}"):
-                delete_trade(index)
+    st.dataframe(trades_df[['date', 'symbol', 'type', 'realized']], use_container_width=True)
 else:
     st.info("No trades recorded yet")
 
-# Locates table with edit and delete buttons
+# Locates table
 st.subheader("Locates Summary")
 if data['locates']:
     locates_df = pd.DataFrame(data['locates'])
     locates_df = locates_df.sort_values('date', ascending=False)
-    
-    # Display locates with edit and delete buttons
-    for index, locate in locates_df.iterrows():
-        col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 1, 1])
-        with col1:
-            st.write(locate['date'])
-        with col2:
-            st.write(locate['symbol'])
-        with col3:
-            st.write(f"${locate['totalCost']:,.2f}")
-        with col4:
-            if st.button("Edit", key=f"edit_locate_{index}"):
-                edit_locate(index)
-        with col5:
-            if st.button("Delete", key=f"delete_locate_{index}"):
-                delete_locate(index)
+    st.dataframe(locates_df[['date', 'symbol', 'totalCost']], use_container_width=True)
 else:
     st.info("No locates recorded yet")
 
