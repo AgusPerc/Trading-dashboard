@@ -95,7 +95,7 @@ def create_pnl_chart(trades_df):
     plt.grid(True, alpha=0.3)
     plt.xticks(rotation=45)
     
-    # Save plot to temporary file instead of buffer
+    # Save plot to temporary file
     with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as tmp_file:
         plt.savefig(tmp_file.name, format='png', dpi=300, bbox_inches='tight')
         plt.close()
@@ -197,43 +197,127 @@ def save_data(data):
     with open('trading_data.json', 'w') as f:
         json.dump(data, f, indent=4)
 
+# Initialize session state for editing
+if 'editing_trade_index' not in st.session_state:
+    st.session_state.editing_trade_index = None
+if 'editing_locate_index' not in st.session_state:
+    st.session_state.editing_locate_index = None
+
 # Load existing data
 data = load_data()
 
-# Sidebar for adding new entries
-st.sidebar.title("Add New Data")
+# Sidebar for adding/editing entries
+st.sidebar.title("Add/Edit Data")
 
-# Add new trade
-st.sidebar.subheader("Add New Trade")
-trade_symbol = st.sidebar.text_input("Symbol (Trade)")
-trade_type = st.sidebar.selectbox("Type", ["Long", "Short"])
-trade_realized = st.sidebar.number_input("Realized P&L")
+# Function to edit trade
+def edit_trade(index):
+    st.session_state.editing_trade_index = index
 
-if st.sidebar.button("Add Trade"):
-    new_trade = {
-        "date": datetime.now().strftime("%Y-%m-%d"),
-        "symbol": trade_symbol,
-        "type": trade_type,
-        "realized": trade_realized
-    }
-    data['trades'].append(new_trade)
-    save_data(data)
-    st.sidebar.success("Trade added successfully!")
+# Function to edit locate
+def edit_locate(index):
+    st.session_state.editing_locate_index = index
 
-# Add new locate
-st.sidebar.subheader("Add New Locate")
-locate_symbol = st.sidebar.text_input("Symbol (Locate)")
-locate_total_cost = st.sidebar.number_input("Total Cost", min_value=0.0)
+# Function to delete trade
+def delete_trade(index):
+    if index < len(data['trades']):
+        data['trades'].pop(index)
+        save_data(data)
+        st.success("Trade deleted successfully!")
+        st.rerun()
 
-if st.sidebar.button("Add Locate"):
-    new_locate = {
-        "date": datetime.now().strftime("%Y-%m-%d"),
-        "symbol": locate_symbol,
-        "totalCost": locate_total_cost
-    }
-    data['locates'].append(new_locate)
-    save_data(data)
-    st.sidebar.success("Locate added successfully!")
+# Function to delete locate
+def delete_locate(index):
+    if index < len(data['locates']):
+        data['locates'].pop(index)
+        save_data(data)
+        st.success("Locate deleted successfully!")
+        st.rerun()
+
+# Add/Edit trade form
+st.sidebar.subheader("Add/Edit Trade")
+if st.session_state.editing_trade_index is not None:
+    trade = data['trades'][st.session_state.editing_trade_index]
+    trade_date = st.sidebar.date_input("Date", datetime.strptime(trade['date'], "%Y-%m-%d"))
+    trade_symbol = st.sidebar.text_input("Symbol (Trade)", value=trade['symbol'])
+    trade_type = st.sidebar.selectbox("Type", ["Long", "Short"], index=0 if trade['type'] == "Long" else 1)
+    trade_realized = st.sidebar.number_input("Realized P&L", value=float(trade['realized']))
+    
+    col1, col2 = st.sidebar.columns(2)
+    with col1:
+        if st.button("Update Trade"):
+            data['trades'][st.session_state.editing_trade_index] = {
+                "date": trade_date.strftime("%Y-%m-%d"),
+                "symbol": trade_symbol,
+                "type": trade_type,
+                "realized": trade_realized
+            }
+            save_data(data)
+            st.session_state.editing_trade_index = None
+            st.success("Trade updated successfully!")
+            st.rerun()
+    
+    with col2:
+        if st.button("Cancel Edit"):
+            st.session_state.editing_trade_index = None
+            st.rerun()
+else:
+    trade_date = st.sidebar.date_input("Date", datetime.now())
+    trade_symbol = st.sidebar.text_input("Symbol (Trade)")
+    trade_type = st.sidebar.selectbox("Type", ["Long", "Short"])
+    trade_realized = st.sidebar.number_input("Realized P&L")
+    
+    if st.sidebar.button("Add Trade"):
+        new_trade = {
+            "date": trade_date.strftime("%Y-%m-%d"),
+            "symbol": trade_symbol,
+            "type": trade_type,
+            "realized": trade_realized
+        }
+        data['trades'].append(new_trade)
+        save_data(data)
+        st.sidebar.success("Trade added successfully!")
+        st.rerun()
+
+# Add/Edit locate form
+st.sidebar.subheader("Add/Edit Locate")
+if st.session_state.editing_locate_index is not None:
+    locate = data['locates'][st.session_state.editing_locate_index]
+    locate_date = st.sidebar.date_input("Date (Locate)", datetime.strptime(locate['date'], "%Y-%m-%d"))
+    locate_symbol = st.sidebar.text_input("Symbol (Locate)", value=locate['symbol'])
+    locate_total_cost = st.sidebar.number_input("Total Cost", min_value=0.0, value=float(locate['totalCost']))
+    
+    col1, col2 = st.sidebar.columns(2)
+    with col1:
+        if st.button("Update Locate"):
+            data['locates'][st.session_state.editing_locate_index] = {
+                "date": locate_date.strftime("%Y-%m-%d"),
+                "symbol": locate_symbol,
+                "totalCost": locate_total_cost
+            }
+            save_data(data)
+            st.session_state.editing_locate_index = None
+            st.success("Locate updated successfully!")
+            st.rerun()
+    
+    with col2:
+        if st.button("Cancel Edit"):
+            st.session_state.editing_locate_index = None
+            st.rerun()
+else:
+    locate_date = st.sidebar.date_input("Date (Locate)", datetime.now())
+    locate_symbol = st.sidebar.text_input("Symbol (Locate)")
+    locate_total_cost = st.sidebar.number_input("Total Cost", min_value=0.0)
+    
+    if st.sidebar.button("Add Locate"):
+        new_locate = {
+            "date": locate_date.strftime("%Y-%m-%d"),
+            "symbol": locate_symbol,
+            "totalCost": locate_total_cost
+        }
+        data['locates'].append(new_locate)
+        save_data(data)
+        st.sidebar.success("Locate added successfully!")
+        st.rerun()
 
 # Main dashboard
 st.title("Trading Dashboard")
@@ -255,21 +339,53 @@ with col2:
 with col3:
     st.metric("Ending Balance", f"${ending_balance:,.2f}")
 
-# Trades table
+# Trades table with edit and delete buttons
 st.subheader("Trades Summary")
 if data['trades']:
     trades_df = pd.DataFrame(data['trades'])
     trades_df = trades_df.sort_values('date', ascending=False)
-    st.dataframe(trades_df[['date', 'symbol', 'type', 'realized']], use_container_width=True)
+    
+# Display trades with edit and delete buttons
+    for index, trade in trades_df.iterrows():
+        col1, col2, col3, col4, col5, col6 = st.columns([2, 2, 2, 2, 1, 1])
+        with col1:
+            st.write(trade['date'])
+        with col2:
+            st.write(trade['symbol'])
+        with col3:
+            st.write(trade['type'])
+        with col4:
+            st.write(f"${trade['realized']:,.2f}")
+        with col5:
+            if st.button("Edit", key=f"edit_trade_{index}"):
+                edit_trade(index)
+        with col6:
+            if st.button("Delete", key=f"delete_trade_{index}"):
+                delete_trade(index)
 else:
     st.info("No trades recorded yet")
 
-# Locates table
+# Locates table with edit and delete buttons
 st.subheader("Locates Summary")
 if data['locates']:
     locates_df = pd.DataFrame(data['locates'])
     locates_df = locates_df.sort_values('date', ascending=False)
-    st.dataframe(locates_df[['date', 'symbol', 'totalCost']], use_container_width=True)
+    
+    # Display locates with edit and delete buttons
+    for index, locate in locates_df.iterrows():
+        col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 1, 1])
+        with col1:
+            st.write(locate['date'])
+        with col2:
+            st.write(locate['symbol'])
+        with col3:
+            st.write(f"${locate['totalCost']:,.2f}")
+        with col4:
+            if st.button("Edit", key=f"edit_locate_{index}"):
+                edit_locate(index)
+        with col5:
+            if st.button("Delete", key=f"delete_locate_{index}"):
+                delete_locate(index)
 else:
     st.info("No locates recorded yet")
 
@@ -309,18 +425,18 @@ if data['trades']:
 if data['trades'] or data['locates']:
     st.subheader("Export Report")
     
-if st.button("Generate PDF Report"):
-    try:
-        pdf_bytes = create_dashboard_pdf(data)
-        
-        # Create download button
-        pdf_filename = f"trading_dashboard_{datetime.now().strftime('%Y%m%d')}.pdf"
-        st.download_button(
-            label="Download PDF Report",
-            data=pdf_bytes,
-            file_name=pdf_filename,
-            mime="application/pdf"
-        )
-        st.success("PDF report generated successfully!")
-    except Exception as e:
-        st.error(f"Error generating PDF: {str(e)}")
+    if st.button("Generate PDF Report"):
+        try:
+            pdf_bytes = create_dashboard_pdf(data)
+            
+            # Create download button
+            pdf_filename = f"trading_dashboard_{datetime.now().strftime('%Y%m%d')}.pdf"
+            st.download_button(
+                label="Download PDF Report",
+                data=pdf_bytes,
+                file_name=pdf_filename,
+                mime="application/pdf"
+            )
+            st.success("PDF report generated successfully!")
+        except Exception as e:
+            st.error(f"Error generating PDF: {str(e)}")
