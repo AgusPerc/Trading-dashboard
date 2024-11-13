@@ -4,3 +4,4 @@ plotly==5.18.0
 fpdf==1.7.2
 matplotlib==3.8.2
 seaborn==0.13.2
+pytz
