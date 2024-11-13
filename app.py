@@ -11,6 +11,7 @@ import base64
 from matplotlib.gridspec import GridSpec
 import tempfile
 import os
+import pytz
 
 # Set page configuration
 st.set_page_config(page_title="Trading Dashboard", layout="wide")
@@ -117,9 +118,15 @@ def create_dashboard_pdf(data):
     if data['trades']:
         trades_df = pd.DataFrame(data['trades'])
         trades_df['date'] = pd.to_datetime(trades_df['date'])
-        today_str = datetime.now().strftime("%Y-%m-%d")
+    
+    # Get current date in Mexico City timezone
+        mexico_tz = pytz.timezone('America/Mexico_City')
+        mexico_now = datetime.now(pytz.UTC).astimezone(mexico_tz)
+        today_str = mexico_now.strftime("%Y-%m-%d")
+    
         daily_pnl = trades_df[trades_df['date'] == today_str]['realized'].sum()
-        
+    
+    # Calculate locate costs for today
         if data['locates']:
             locates_df = pd.DataFrame(data['locates'])
             locates_df['date'] = pd.to_datetime(locates_df['date'])
@@ -224,7 +231,10 @@ data = load_data()
 st.sidebar.title("Add New Trade")
 
 # Combined trade and locate input
-trade_date = st.sidebar.date_input("Date", datetime.now())
+# In the sidebar section where you get the date input:
+mexico_tz = pytz.timezone('America/Mexico_City')
+mexico_now = datetime.now(pytz.UTC).astimezone(mexico_tz)
+trade_date = st.sidebar.date_input("Date", mexico_now)
 trade_symbol = st.sidebar.text_input("Symbol")
 trade_type = st.sidebar.selectbox("Type", ["Long", "Short"])
 trade_realized = st.sidebar.number_input("Realized P&L")
