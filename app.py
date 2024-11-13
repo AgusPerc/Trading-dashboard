@@ -106,7 +106,7 @@ def create_dashboard_pdf(data):
     pdf = DashboardPDF()
     pdf.add_page()
     
-    # Calculate summary statistics including daily P&L
+    # Calculate summary statistics
     starting_balance = data.get('starting_balance', 50000)
     total_realized = sum(trade['realized'] for trade in data['trades'])
     total_locate_cost = sum(locate['totalCost'] for locate in data['locates'])
@@ -114,33 +114,13 @@ def create_dashboard_pdf(data):
     ending_balance = starting_balance + net_pnl
     return_percent = (net_pnl / starting_balance) * 100 if starting_balance else 0
     
-    # Calculate daily P&L for PDF
-    if data['trades']:
-        trades_df = pd.DataFrame(data['trades'])
-        trades_df['date'] = pd.to_datetime(trades_df['date'])
-    
-    # Get current date in Mexico City timezone
-        mexico_tz = pytz.timezone('America/Mexico_City')
-        mexico_now = datetime.now(pytz.UTC).astimezone(mexico_tz)
-        today_str = mexico_now.strftime("%Y-%m-%d")
-    
-    
-    # Calculate locate costs for today
-        if data['locates']:
-            locates_df = pd.DataFrame(data['locates'])
-            locates_df['date'] = pd.to_datetime(locates_df['date'])
-
-    
-    # Add metrics section with daily P&L
+    # Add metrics section
     pdf.add_metric_box("Starting Balance", starting_balance)
     pdf.set_x(75)
     pdf.set_y(pdf.get_y() - 30)
-    pdf.add_metric_box("Daily P&L", daily_pnl)
+    pdf.add_metric_box("Net P&L", net_pnl, return_percent)
     pdf.set_x(140)
     pdf.set_y(pdf.get_y() - 30)
-    pdf.add_metric_box("Net P&L", net_pnl, return_percent)
-    pdf.set_x(10)
-    pdf.set_y(pdf.get_y() + 30)
     pdf.add_metric_box("Ending Balance", ending_balance)
     pdf.ln(10)
     
@@ -227,7 +207,6 @@ data = load_data()
 st.sidebar.title("Add New Trade")
 
 # Combined trade and locate input
-# In the sidebar section where you get the date input:
 mexico_tz = pytz.timezone('America/Mexico_City')
 mexico_now = datetime.now(pytz.UTC).astimezone(mexico_tz)
 trade_date = st.sidebar.date_input("Date", mexico_now)
@@ -272,31 +251,13 @@ net_pnl = total_realized - total_locate_cost
 ending_balance = starting_balance + net_pnl
 return_percent = (net_pnl / starting_balance) * 100 if starting_balance else 0
 
-# Calculate daily P&L
-if data['trades']:
-    trades_df = pd.DataFrame(data['trades'])
-    trades_df['date'] = pd.to_datetime(trades_df['date'])
-    today_str = datetime.now().strftime("%Y-%m-%d")
-    daily_pnl = trades_df[trades_df['date'] == today_str]['realized'].sum()
-    
-    # Subtract today's locate costs
-    if data['locates']:
-        locates_df = pd.DataFrame(data['locates'])
-        locates_df['date'] = pd.to_datetime(locates_df['date'])
-        daily_locate_cost = locates_df[locates_df['date'] == today_str]['totalCost'].sum()
-        daily_pnl -= daily_locate_cost
-else:
-    daily_pnl = 0.0
-
-# Summary metrics
-col1, col2, col3, col4 = st.columns(4)
+# Summary metrics (removed daily P&L)
+col1, col2, col3 = st.columns(3)
 with col1:
     st.metric("Starting Balance", f"${starting_balance:,.2f}")
 with col2:
-    st.metric("Daily P&L", f"${daily_pnl:,.2f}")
-with col3:
     st.metric("Net P&L", f"${net_pnl:,.2f}", f"{return_percent:.2f}%")
-with col4:
+with col3:
     st.metric("Ending Balance", f"${ending_balance:,.2f}")
 
 # Trades table
