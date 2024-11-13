@@ -124,16 +124,12 @@ def create_dashboard_pdf(data):
         mexico_now = datetime.now(pytz.UTC).astimezone(mexico_tz)
         today_str = mexico_now.strftime("%Y-%m-%d")
     
-        daily_pnl = trades_df[trades_df['date'] == today_str]['realized'].sum()
     
     # Calculate locate costs for today
         if data['locates']:
             locates_df = pd.DataFrame(data['locates'])
             locates_df['date'] = pd.to_datetime(locates_df['date'])
-            daily_locate_cost = locates_df[locates_df['date'] == today_str]['totalCost'].sum()
-            daily_pnl -= daily_locate_cost
-    else:
-        daily_pnl = 0.0
+
     
     # Add metrics section with daily P&L
     pdf.add_metric_box("Starting Balance", starting_balance)
