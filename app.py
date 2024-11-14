@@ -203,7 +203,27 @@ def save_data(data):
 # Load existing data
 data = load_data()
 
-# Sidebar for adding new entries
+# Sidebar for settings and adding new entries
+st.sidebar.title("Dashboard Settings")
+
+# Add starting balance input in the sidebar
+new_starting_balance = st.sidebar.number_input(
+    "Starting Balance",
+    min_value=0.0,
+    value=float(data.get('starting_balance', 50000)),
+    step=1000.0,
+    format="%.2f"
+)
+
+# Add button to update starting balance
+if st.sidebar.button("Update Starting Balance"):
+    data['starting_balance'] = new_starting_balance
+    save_data(data)
+    st.sidebar.success("Starting balance updated successfully!")
+
+st.sidebar.markdown("---")  # Add a separator
+
+# Trade entry section
 st.sidebar.title("Add New Trade")
 
 # Combined trade and locate input
@@ -251,7 +271,7 @@ net_pnl = total_realized - total_locate_cost
 ending_balance = starting_balance + net_pnl
 return_percent = (net_pnl / starting_balance) * 100 if starting_balance else 0
 
-# Summary metrics (removed daily P&L)
+# Summary metrics
 col1, col2, col3 = st.columns(3)
 with col1:
     st.metric("Starting Balance", f"${starting_balance:,.2f}")
