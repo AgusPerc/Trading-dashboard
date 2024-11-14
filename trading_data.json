@@ -17,6 +17,48 @@
             "symbol": "SGN",
             "type": "Short",
             "realized": -391.59
+        },
+        {
+            "date": "2024-11-12",
+            "symbol": "XBP",
+            "type": "Short",
+            "realized": 222.47
+        },
+        {
+            "date": "2024-11-12",
+            "symbol": "LGMK",
+            "type": "Short",
+            "realized": -1304.08
+        },
+        {
+            "date": "2024-11-12",
+            "symbol": "FOXO",
+            "type": "Short",
+            "realized": -1089.1
+        },
+        {
+            "date": "2024-11-12",
+            "symbol": "CER0",
+            "type": "Short",
+            "realized": -779.61
+        },
+        {
+            "date": "2024-11-12",
+            "symbol": "BTCT",
+            "type": "Short",
+            "realized": -1063.18
+        },
+        {
+            "date": "2024-11-13",
+            "symbol": "KXIN",
+            "type": "Short",
+            "realized": -2141.53
+        },
+        {
+            "date": "2024-11-13",
+            "symbol": "MVST",
+            "type": "Short",
+            "realized": -1801.48
         }
     ],
     "locates": [
@@ -39,7 +81,42 @@
             "date": "2024-11-11",
             "symbol": "SGN",
             "totalCost": 12.0
+        },
+        {
+            "date": "2024-11-12",
+            "symbol": "XBP",
+            "totalCost": 62.4
+        },
+        {
+            "date": "2024-11-12",
+            "symbol": "LGMK",
+            "totalCost": 14.35
+        },
+        {
+            "date": "2024-11-12",
+            "symbol": "FOXO",
+            "totalCost": 32.0
+        },
+        {
+            "date": "2024-11-12",
+            "symbol": "CER0",
+            "totalCost": 16.8
+        },
+        {
+            "date": "2024-11-12",
+            "symbol": "BTCT",
+            "totalCost": 15.2
+        },
+        {
+            "date": "2024-11-13",
+            "symbol": "KXIN",
+            "totalCost": 60.0
+        },
+        {
+            "date": "2024-11-13",
+            "symbol": "MVST",
+            "totalCost": 6.0
         }
     ],
-    "starting_balance": 50000
+    "starting_balance": 75000
 }
