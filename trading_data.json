@@ -59,6 +59,54 @@
             "symbol": "MVST",
             "type": "Short",
             "realized": -1801.48
+        },
+        {
+            "date": "2024-11-14",
+            "symbol": "QUBT",
+            "type": "Short",
+            "realized": -274.033333
+        },
+        {
+            "date": "2024-11-14",
+            "symbol": "UAVS",
+            "type": "Short",
+            "realized": -2397.48333
+        },
+        {
+            "date": "2024-11-14",
+            "symbol": "GXAI",
+            "type": "Short",
+            "realized": -1417.65333
+        },
+        {
+            "date": "2024-11-15",
+            "symbol": "AREN",
+            "type": "Short",
+            "realized": -2146.3233
+        },
+        {
+            "date": "2024-11-15",
+            "symbol": "BENF",
+            "type": "Short",
+            "realized": -453.95
+        },
+        {
+            "date": "2024-11-15",
+            "symbol": "CERO",
+            "type": "Short",
+            "realized": 1044.53
+        },
+        {
+            "date": "2024-11-15",
+            "symbol": "SPPL",
+            "type": "Short",
+            "realized": -321.55
+        },
+        {
+            "date": "2024-11-15",
+            "symbol": "GREE",
+            "type": "Short",
+            "realized": 271.75
         }
     ],
     "locates": [
@@ -116,6 +164,46 @@
             "date": "2024-11-13",
             "symbol": "MVST",
             "totalCost": 6.0
+        },
+        {
+            "date": "2024-11-18",
+            "symbol": "QUBT",
+            "totalCost": 11.72
+        },
+        {
+            "date": "2024-11-14",
+            "symbol": "UAVS",
+            "totalCost": 11.72
+        },
+        {
+            "date": "2024-11-14",
+            "symbol": "GXAI",
+            "totalCost": 11.72
+        },
+        {
+            "date": "2024-11-14",
+            "symbol": "GXAI",
+            "totalCost": 44.24
+        },
+        {
+            "date": "2024-11-15",
+            "symbol": "BENF",
+            "totalCost": 6.615
+        },
+        {
+            "date": "2024-11-15",
+            "symbol": "CERO",
+            "totalCost": 6.48
+        },
+        {
+            "date": "2024-11-15",
+            "symbol": "SPPL",
+            "totalCost": 3.41
+        },
+        {
+            "date": "2024-11-15",
+            "symbol": "GREE",
+            "totalCost": 3.41
         }
     ],
     "starting_balance": 75000
