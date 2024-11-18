@@ -4,13 +4,13 @@
             "date": "2024-11-11",
             "symbol": "CERO",
             "type": "Short",
-            "realized": -801.95
+            "realized": -901.95
         },
         {
             "date": "2024-11-11",
             "symbol": "HOVR",
             "type": "Short",
-            "realized": -732.59
+            "realized": -782.59
         },
         {
             "date": "2024-11-11",
@@ -28,25 +28,25 @@
             "date": "2024-11-12",
             "symbol": "LGMK",
             "type": "Short",
-            "realized": -1304.08
+            "realized": -1364.08
         },
         {
             "date": "2024-11-12",
             "symbol": "FOXO",
             "type": "Short",
-            "realized": -1089.1
+            "realized": -1189.1
         },
         {
             "date": "2024-11-12",
             "symbol": "CER0",
             "type": "Short",
-            "realized": -779.61
+            "realized": -799.61
         },
         {
             "date": "2024-11-12",
             "symbol": "BTCT",
             "type": "Short",
-            "realized": -1063.18
+            "realized": -1163.18
         },
         {
             "date": "2024-11-13",
@@ -58,13 +58,13 @@
             "date": "2024-11-13",
             "symbol": "MVST",
             "type": "Short",
-            "realized": -1801.48
+            "realized": -1851.48
         },
         {
             "date": "2024-11-14",
             "symbol": "QUBT",
             "type": "Short",
-            "realized": -274.033333
+            "realized": -294.033333
         },
         {
             "date": "2024-11-14",
@@ -76,7 +76,7 @@
             "date": "2024-11-14",
             "symbol": "GXAI",
             "type": "Short",
-            "realized": -1417.65333
+            "realized": -1457.65333
         },
         {
             "date": "2024-11-15",
@@ -88,25 +88,25 @@
             "date": "2024-11-15",
             "symbol": "BENF",
             "type": "Short",
-            "realized": -453.95
+            "realized": -493.95
         },
         {
             "date": "2024-11-15",
             "symbol": "CERO",
             "type": "Short",
-            "realized": 1044.53
+            "realized": 1014.53
         },
         {
             "date": "2024-11-15",
             "symbol": "SPPL",
             "type": "Short",
-            "realized": -321.55
+            "realized": -371.55
         },
         {
             "date": "2024-11-15",
             "symbol": "GREE",
             "type": "Short",
-            "realized": 271.75
+            "realized": 251.75
         }
     ],
     "locates": [
