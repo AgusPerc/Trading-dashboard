@@ -4,13 +4,13 @@
             "date": "2024-11-11",
             "symbol": "CERO",
             "type": "Short",
-            "realized": -901.95
+            "realized": -801.95
         },
         {
             "date": "2024-11-11",
             "symbol": "HOVR",
             "type": "Short",
-            "realized": -782.59
+            "realized": -732.59
         },
         {
             "date": "2024-11-11",
@@ -28,25 +28,25 @@
             "date": "2024-11-12",
             "symbol": "LGMK",
             "type": "Short",
-            "realized": -1364.08
+            "realized": -1304.08
         },
         {
             "date": "2024-11-12",
             "symbol": "FOXO",
             "type": "Short",
-            "realized": -1189.1
+            "realized": -1089.1
         },
         {
             "date": "2024-11-12",
             "symbol": "CER0",
             "type": "Short",
-            "realized": -799.61
+            "realized": -779.61
         },
         {
             "date": "2024-11-12",
             "symbol": "BTCT",
             "type": "Short",
-            "realized": -1163.18
+            "realized": -1063.18
         },
         {
             "date": "2024-11-13",
@@ -58,13 +58,13 @@
             "date": "2024-11-13",
             "symbol": "MVST",
             "type": "Short",
-            "realized": -1851.48
+            "realized": -1801.48
         },
         {
             "date": "2024-11-14",
             "symbol": "QUBT",
             "type": "Short",
-            "realized": -294.033333
+            "realized": -274.033333
         },
         {
             "date": "2024-11-14",
@@ -76,7 +76,7 @@
             "date": "2024-11-14",
             "symbol": "GXAI",
             "type": "Short",
-            "realized": -1457.65333
+            "realized": -1417.65333
         },
         {
             "date": "2024-11-15",
@@ -88,25 +88,49 @@
             "date": "2024-11-15",
             "symbol": "BENF",
             "type": "Short",
-            "realized": -493.95
+            "realized": -453.95
         },
         {
             "date": "2024-11-15",
             "symbol": "CERO",
             "type": "Short",
-            "realized": 1014.53
+            "realized": 1044.53
         },
         {
             "date": "2024-11-15",
             "symbol": "SPPL",
             "type": "Short",
-            "realized": -371.55
+            "realized": -321.55
         },
         {
             "date": "2024-11-15",
             "symbol": "GREE",
             "type": "Short",
-            "realized": 251.75
+            "realized": 271.75
+        },
+        {
+            "date": "2024-11-18",
+            "symbol": "APLM",
+            "type": "Short",
+            "realized": -365.466
+        },
+        {
+            "date": "2024-11-18",
+            "symbol": "HCWB",
+            "type": "Short",
+            "realized": -447.07
+        },
+        {
+            "date": "2024-11-18",
+            "symbol": "UAVS",
+            "type": "Short",
+            "realized": 761.98
+        },
+        {
+            "date": "2024-11-18",
+            "symbol": "NIVF",
+            "type": "Short",
+            "realized": 206.85
         }
     ],
     "locates": [
@@ -204,6 +228,26 @@
             "date": "2024-11-15",
             "symbol": "GREE",
             "totalCost": 3.41
+        },
+        {
+            "date": "2024-11-18",
+            "symbol": "APLM",
+            "totalCost": 10.0
+        },
+        {
+            "date": "2024-11-18",
+            "symbol": "HCWB",
+            "totalCost": 20.25
+        },
+        {
+            "date": "2024-11-18",
+            "symbol": "UAVS",
+            "totalCost": 12.8
+        },
+        {
+            "date": "2024-11-18",
+            "symbol": "NIVF",
+            "totalCost": 0.8
         }
     ],
     "starting_balance": 75000
