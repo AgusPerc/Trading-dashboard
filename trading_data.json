@@ -131,6 +131,30 @@
             "symbol": "NIVF",
             "type": "Short",
             "realized": 206.85
+        },
+        {
+            "date": "2024-11-19",
+            "symbol": "SOAR",
+            "type": "Short",
+            "realized": -463.98
+        },
+        {
+            "date": "2024-11-19",
+            "symbol": "TRNR",
+            "type": "Short",
+            "realized": -1318.79
+        },
+        {
+            "date": "2024-11-19",
+            "symbol": "WBUY",
+            "type": "Short",
+            "realized": -67.29
+        },
+        {
+            "date": "2024-11-19",
+            "symbol": "NCNC",
+            "type": "Short",
+            "realized": -437.08
         }
     ],
     "locates": [
@@ -248,6 +272,26 @@
             "date": "2024-11-18",
             "symbol": "NIVF",
             "totalCost": 0.8
+        },
+        {
+            "date": "2024-11-19",
+            "symbol": "SOAR",
+            "totalCost": 21.75
+        },
+        {
+            "date": "2024-11-19",
+            "symbol": "TRNR",
+            "totalCost": 190.0
+        },
+        {
+            "date": "2024-11-19",
+            "symbol": "WBUY",
+            "totalCost": 8.72
+        },
+        {
+            "date": "2024-11-19",
+            "symbol": "NCNC",
+            "totalCost": 8.0
         }
     ],
     "starting_balance": 75000
