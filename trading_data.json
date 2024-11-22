@@ -155,6 +155,48 @@
             "symbol": "NCNC",
             "type": "Short",
             "realized": -437.08
+        },
+        {
+            "date": "2024-11-20",
+            "symbol": "FBRX",
+            "type": "Short",
+            "realized": -536.0
+        },
+        {
+            "date": "2024-11-20",
+            "symbol": "QSI",
+            "type": "Short",
+            "realized": 436.0
+        },
+        {
+            "date": "2024-11-20",
+            "symbol": "SLXN",
+            "type": "Short",
+            "realized": -408.0
+        },
+        {
+            "date": "2024-11-20",
+            "symbol": "TNXP",
+            "type": "Short",
+            "realized": 367.0
+        },
+        {
+            "date": "2024-11-21",
+            "symbol": "SPAI",
+            "type": "Short",
+            "realized": 2534.85
+        },
+        {
+            "date": "2024-11-21",
+            "symbol": "WORX",
+            "type": "Short",
+            "realized": -612.58
+        },
+        {
+            "date": "2024-11-21",
+            "symbol": "CDT",
+            "type": "Short",
+            "realized": -474.02
         }
     ],
     "locates": [
@@ -292,6 +334,41 @@
             "date": "2024-11-19",
             "symbol": "NCNC",
             "totalCost": 8.0
+        },
+        {
+            "date": "2024-11-20",
+            "symbol": "FBRX",
+            "totalCost": 97.0
+        },
+        {
+            "date": "2024-11-20",
+            "symbol": "QSI",
+            "totalCost": 16.0
+        },
+        {
+            "date": "2024-11-20",
+            "symbol": "SLXN",
+            "totalCost": 7.0
+        },
+        {
+            "date": "2024-11-21",
+            "symbol": "TNXP",
+            "totalCost": 4.7
+        },
+        {
+            "date": "2024-11-21",
+            "symbol": "SPAI",
+            "totalCost": 186.0
+        },
+        {
+            "date": "2024-11-21",
+            "symbol": "WORX",
+            "totalCost": 26.25
+        },
+        {
+            "date": "2024-11-21",
+            "symbol": "CDT",
+            "totalCost": 6.8
         }
     ],
     "starting_balance": 75000
