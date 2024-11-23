@@ -197,6 +197,24 @@
             "symbol": "CDT",
             "type": "Short",
             "realized": -474.02
+        },
+        {
+            "date": "2024-11-22",
+            "symbol": "JTAI",
+            "type": "Short",
+            "realized": 3348.79
+        },
+        {
+            "date": "2024-11-22",
+            "symbol": "SKK",
+            "type": "Short",
+            "realized": 619.22
+        },
+        {
+            "date": "2024-11-22",
+            "symbol": "WCT",
+            "type": "Short",
+            "realized": -2408.8
         }
     ],
     "locates": [
@@ -369,6 +387,21 @@
             "date": "2024-11-21",
             "symbol": "CDT",
             "totalCost": 6.8
+        },
+        {
+            "date": "2024-11-22",
+            "symbol": "JTAI",
+            "totalCost": 54.45
+        },
+        {
+            "date": "2024-11-22",
+            "symbol": "SKK",
+            "totalCost": 5.44
+        },
+        {
+            "date": "2024-11-22",
+            "symbol": "WCT",
+            "totalCost": 49.77
         }
     ],
     "starting_balance": 75000
