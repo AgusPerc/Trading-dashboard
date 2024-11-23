@@ -350,10 +350,10 @@ if data['trades'] or data['locates']:
                 mime="application/pdf"
             )
             st.success("PDF report generated successfully!")
-                except Exception as e:
-                    st.error(f"Error generating PDF: {str(e)}")
+        except Exception as e:
+            st.error(f"Error generating PDF: {str(e)}")
 
-            if __name__ == "__main__":
-                st.sidebar.markdown("---")
-                st.sidebar.write("Trading Dashboard v1.0")
-                st.sidebar.write("© 2024 All rights reserved")
+if __name__ == "__main__":
+    st.sidebar.markdown("---")
+    st.sidebar.write("Trading Dashboard v1.0")
+    st.sidebar.write("© 2024 All rights reserved")
