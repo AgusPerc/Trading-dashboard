@@ -83,20 +83,20 @@ class DashboardPDF(FPDF):
             self.ln()
         self.ln(5)
 
-    def calculate_latest_daily_pnl(trades, starting_balance):
-        if not trades:
-            return 0, 0, "No trades"
-        
-        trades_df = pd.DataFrame(trades)
-        trades_df['date'] = pd.to_datetime(trades_df['date'])
-        latest_date = trades_df['date'].max()
-        latest_pnl = trades_df[trades_df['date'] == latest_date]['realized'].sum()
-        
-        # Calculate daily percentage return based on starting balance
-        daily_return_percent = (latest_pnl / starting_balance) * 100
-        
-        return latest_pnl, daily_return_percent, latest_date.strftime("%Y-%m-%d")
+def calculate_latest_daily_pnl(trades, starting_balance):
+    if not trades:
+        return 0, 0, "No trades"
     
+    trades_df = pd.DataFrame(trades)
+    trades_df['date'] = pd.to_datetime(trades_df['date'])
+    latest_date = trades_df['date'].max()
+    latest_pnl = trades_df[trades_df['date'] == latest_date]['realized'].sum()
+    
+    # Calculate daily percentage return based on starting balance
+    daily_return_percent = (latest_pnl / starting_balance) * 100
+    
+    return latest_pnl, daily_return_percent, latest_date.strftime("%Y-%m-%d")
+
     # [Previous code remains the same until the metrics section]
     
     # Calculate summary statistics
@@ -123,33 +123,33 @@ class DashboardPDF(FPDF):
             st.metric(f"Daily P&L ({latest_date})", f"${latest_daily_pnl:,.2f}", f"{daily_return_percent:.2f}%")
         else:
             st.metric("Daily P&L", "No trades")
+
+# [Also update the PDF generation to include the daily percentage]
+def create_dashboard_pdf(data):
+    pdf = DashboardPDF()
+    pdf.add_page()
     
-    # [Also update the PDF generation to include the daily percentage]
-    def create_dashboard_pdf(data):
-        pdf = DashboardPDF()
-        pdf.add_page()
-        
-        # Calculate summary statistics
-        starting_balance = data.get('starting_balance', 50000)
-        total_realized = sum(trade['realized'] for trade in data['trades'])
-        total_locate_cost = sum(locate['totalCost'] for locate in data['locates'])
-        net_pnl = total_realized - total_locate_cost
-        ending_balance = starting_balance + net_pnl
-        return_percent = (net_pnl / starting_balance) * 100 if starting_balance else 0
-        latest_daily_pnl, daily_return_percent, latest_date = calculate_latest_daily_pnl(data['trades'], starting_balance)
-        
-        # Add metrics section
-        pdf.add_metric_box("Starting Balance", starting_balance)
-        pdf.set_x(75)
-        pdf.set_y(pdf.get_y() - 30)
-        pdf.add_metric_box("Net P&L", net_pnl, return_percent)
-        pdf.set_x(140)
-        pdf.set_y(pdf.get_y() - 30)
-        pdf.add_metric_box("Ending Balance", ending_balance)
-        pdf.set_x(205)
-        pdf.set_y(pdf.get_y() - 30)
-        if latest_date != "No trades":
-            pdf.add_metric_box(f"Daily P&L ({latest_date})", latest_daily_pnl, daily_return_percent)
+    # Calculate summary statistics
+    starting_balance = data.get('starting_balance', 50000)
+    total_realized = sum(trade['realized'] for trade in data['trades'])
+    total_locate_cost = sum(locate['totalCost'] for locate in data['locates'])
+    net_pnl = total_realized - total_locate_cost
+    ending_balance = starting_balance + net_pnl
+    return_percent = (net_pnl / starting_balance) * 100 if starting_balance else 0
+    latest_daily_pnl, daily_return_percent, latest_date = calculate_latest_daily_pnl(data['trades'], starting_balance)
+    
+    # Add metrics section
+    pdf.add_metric_box("Starting Balance", starting_balance)
+    pdf.set_x(75)
+    pdf.set_y(pdf.get_y() - 30)
+    pdf.add_metric_box("Net P&L", net_pnl, return_percent)
+    pdf.set_x(140)
+    pdf.set_y(pdf.get_y() - 30)
+    pdf.add_metric_box("Ending Balance", ending_balance)
+    pdf.set_x(205)
+    pdf.set_y(pdf.get_y() - 30)
+    if latest_date != "No trades":
+        pdf.add_metric_box(f"Daily P&L ({latest_date})", latest_daily_pnl, daily_return_percent)
     
     # Add P&L chart if there are trades
     if data['trades']:
@@ -363,7 +363,7 @@ if data['trades'] or data['locates']:
             )
             st.success("PDF report generated successfully!")
         except Exception as e:
-            st.error(f"Error generating PDF: {str(e)}")
+            st.error(f"Errorgenerating PDF: {str(e)}")
 
 if __name__ == "__main__":
     st.sidebar.markdown("---")
