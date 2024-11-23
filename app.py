@@ -83,6 +83,16 @@ class DashboardPDF(FPDF):
             self.ln()
         self.ln(5)
 
+def calculate_latest_daily_pnl(trades):
+    if not trades:
+        return 0, "No trades"
+    
+    trades_df = pd.DataFrame(trades)
+    trades_df['date'] = pd.to_datetime(trades_df['date'])
+    latest_date = trades_df['date'].max()
+    latest_pnl = trades_df[trades_df['date'] == latest_date]['realized'].sum()
+    return latest_pnl, latest_date.strftime("%Y-%m-%d")
+
 def create_pnl_chart(trades_df):
     plt.figure(figsize=(10, 4))
     daily_pnl = trades_df.groupby('date')['realized'].sum().cumsum()
@@ -113,6 +123,7 @@ def create_dashboard_pdf(data):
     net_pnl = total_realized - total_locate_cost
     ending_balance = starting_balance + net_pnl
     return_percent = (net_pnl / starting_balance) * 100 if starting_balance else 0
+    latest_daily_pnl, latest_date = calculate_latest_daily_pnl(data['trades'])
     
     # Add metrics section
     pdf.add_metric_box("Starting Balance", starting_balance)
@@ -122,6 +133,10 @@ def create_dashboard_pdf(data):
     pdf.set_x(140)
     pdf.set_y(pdf.get_y() - 30)
     pdf.add_metric_box("Ending Balance", ending_balance)
+    pdf.set_x(205)
+    pdf.set_y(pdf.get_y() - 30)
+    if latest_date != "No trades":
+        pdf.add_metric_box(f"Daily P&L ({latest_date})", latest_daily_pnl)
     pdf.ln(10)
     
     # Add P&L chart if there are trades
@@ -251,14 +266,22 @@ net_pnl = total_realized - total_locate_cost
 ending_balance = starting_balance + net_pnl
 return_percent = (net_pnl / starting_balance) * 100 if starting_balance else 0
 
-# Summary metrics (removed daily P&L)
-col1, col2, col3 = st.columns(3)
+# Calculate latest daily P&L
+latest_daily_pnl, latest_date = calculate_latest_daily_pnl(data['trades'])
+
+# Summary metrics
+col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.metric("Starting Balance", f"${starting_balance:,.2f}")
 with col2:
     st.metric("Net P&L", f"${net_pnl:,.2f}", f"{return_percent:.2f}%")
 with col3:
     st.metric("Ending Balance", f"${ending_balance:,.2f}")
+with col4:
+    if latest_date != "No trades":
+        st.metric(f"Daily P&L ({latest_date})", f"${latest_daily_pnl:,.2f}")
+    else:
+        st.metric("Daily P&L", "No trades")
 
 # Trades table
 st.subheader("Trades Summary")
@@ -327,5 +350,10 @@ if data['trades'] or data['locates']:
                 mime="application/pdf"
             )
             st.success("PDF report generated successfully!")
-        except Exception as e:
-            st.error(f"Error generating PDF: {str(e)}")
+                except Exception as e:
+                    st.error(f"Error generating PDF: {str(e)}")
+
+            if __name__ == "__main__":
+                st.sidebar.markdown("---")
+                st.sidebar.write("Trading Dashboard v1.0")
+                st.sidebar.write("© 2024 All rights reserved")
