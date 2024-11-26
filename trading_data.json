@@ -215,6 +215,36 @@
             "symbol": "WCT",
             "type": "Short",
             "realized": -2408.8
+        },
+        {
+            "date": "2024-11-25",
+            "symbol": "QMCO",
+            "type": "Short",
+            "realized": -418.886
+        },
+        {
+            "date": "2024-11-25",
+            "symbol": "QMMM",
+            "type": "Short",
+            "realized": 807.934
+        },
+        {
+            "date": "2024-11-25",
+            "symbol": "VSTE",
+            "type": "Short",
+            "realized": 344.464
+        },
+        {
+            "date": "2024-11-25",
+            "symbol": "WLDS",
+            "type": "Short",
+            "realized": 10.854
+        },
+        {
+            "date": "2024-11-25",
+            "symbol": "RGTI",
+            "type": "Short",
+            "realized": -416.146
         }
     ],
     "locates": [
@@ -402,6 +432,26 @@
             "date": "2024-11-22",
             "symbol": "WCT",
             "totalCost": 49.77
+        },
+        {
+            "date": "2024-11-25",
+            "symbol": "QMCO",
+            "totalCost": 1.422
+        },
+        {
+            "date": "2024-11-25",
+            "symbol": "QMMM",
+            "totalCost": 1.44
+        },
+        {
+            "date": "2024-11-25",
+            "symbol": "VSTE",
+            "totalCost": 7.875
+        },
+        {
+            "date": "2024-11-25",
+            "symbol": "WLDS",
+            "totalCost": 66.5
         }
     ],
     "starting_balance": 75000
