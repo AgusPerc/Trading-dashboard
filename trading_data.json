@@ -245,6 +245,24 @@
             "symbol": "RGTI",
             "type": "Short",
             "realized": -416.146
+        },
+        {
+            "date": "2024-11-26",
+            "symbol": "TOYO",
+            "type": "Short",
+            "realized": 999.3833
+        },
+        {
+            "date": "2024-11-26",
+            "symbol": "ZENA",
+            "type": "Short",
+            "realized": -569.956667
+        },
+        {
+            "date": "2024-11-26",
+            "symbol": "IDAI",
+            "type": "Short",
+            "realized": 587.153333
         }
     ],
     "locates": [
@@ -452,6 +470,21 @@
             "date": "2024-11-25",
             "symbol": "WLDS",
             "totalCost": 66.5
+        },
+        {
+            "date": "2024-11-26",
+            "symbol": "TOYO",
+            "totalCost": 18.648
+        },
+        {
+            "date": "2024-11-26",
+            "symbol": "ZENA",
+            "totalCost": 5.66
+        },
+        {
+            "date": "2024-11-26",
+            "symbol": "IDAI",
+            "totalCost": 6.169
         }
     ],
     "starting_balance": 75000
