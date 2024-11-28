@@ -263,6 +263,36 @@
             "symbol": "IDAI",
             "type": "Short",
             "realized": 587.153333
+        },
+        {
+            "date": "2024-11-27",
+            "symbol": "UMAC",
+            "type": "Short",
+            "realized": -2101.0
+        },
+        {
+            "date": "2024-11-27",
+            "symbol": "IDAI",
+            "type": "Short",
+            "realized": -757.0
+        },
+        {
+            "date": "2024-11-27",
+            "symbol": "VCIG",
+            "type": "Short",
+            "realized": -431.0
+        },
+        {
+            "date": "2024-11-27",
+            "symbol": "CYCN",
+            "type": "Short",
+            "realized": -323.0
+        },
+        {
+            "date": "2024-11-27",
+            "symbol": "TRNR",
+            "type": "Short",
+            "realized": 189.0
         }
     ],
     "locates": [
@@ -485,6 +515,31 @@
             "date": "2024-11-26",
             "symbol": "IDAI",
             "totalCost": 6.169
+        },
+        {
+            "date": "2024-11-27",
+            "symbol": "UMAC",
+            "totalCost": 13.4
+        },
+        {
+            "date": "2024-11-27",
+            "symbol": "IDAI",
+            "totalCost": 3.33
+        },
+        {
+            "date": "2024-11-27",
+            "symbol": "VCIG",
+            "totalCost": 7.27
+        },
+        {
+            "date": "2024-11-27",
+            "symbol": "VCIG",
+            "totalCost": 2.8
+        },
+        {
+            "date": "2024-11-27",
+            "symbol": "TRNR",
+            "totalCost": 4.2
         }
     ],
     "starting_balance": 75000
