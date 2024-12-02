@@ -293,6 +293,36 @@
             "symbol": "TRNR",
             "type": "Short",
             "realized": 189.0
+        },
+        {
+            "date": "2024-11-29",
+            "symbol": "BSLK",
+            "type": "Short",
+            "realized": 287.92
+        },
+        {
+            "date": "2024-11-29",
+            "symbol": "PGHL",
+            "type": "Short",
+            "realized": -218.88
+        },
+        {
+            "date": "2024-11-29",
+            "symbol": "PRZO",
+            "type": "Short",
+            "realized": -556.01
+        },
+        {
+            "date": "2024-11-29",
+            "symbol": "UMAC",
+            "type": "Short",
+            "realized": -414.14
+        },
+        {
+            "date": "2024-11-29",
+            "symbol": "DEVS",
+            "type": "Short",
+            "realized": -218.96
         }
     ],
     "locates": [
@@ -540,6 +570,31 @@
             "date": "2024-11-27",
             "symbol": "TRNR",
             "totalCost": 4.2
+        },
+        {
+            "date": "2024-11-29",
+            "symbol": "BSLK",
+            "totalCost": 26.5
+        },
+        {
+            "date": "2024-11-29",
+            "symbol": "PGHL",
+            "totalCost": 0.88
+        },
+        {
+            "date": "2024-11-29",
+            "symbol": "PRZO",
+            "totalCost": 49.7
+        },
+        {
+            "date": "2024-11-29",
+            "symbol": "UMAC",
+            "totalCost": 0.925
+        },
+        {
+            "date": "2024-11-29",
+            "symbol": "DEVS",
+            "totalCost": 1.76
         }
     ],
     "starting_balance": 75000
