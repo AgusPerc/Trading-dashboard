@@ -323,6 +323,24 @@
             "symbol": "DEVS",
             "type": "Short",
             "realized": -218.96
+        },
+        {
+            "date": "2024-12-02",
+            "symbol": "SGBX",
+            "type": "Short",
+            "realized": 357.37
+        },
+        {
+            "date": "2024-12-02",
+            "symbol": "SNTI",
+            "type": "Short",
+            "realized": -3025.69
+        },
+        {
+            "date": "2024-12-02",
+            "symbol": "OPTT",
+            "type": "Short",
+            "realized": -379.67
         }
     ],
     "locates": [
@@ -595,6 +613,11 @@
             "date": "2024-11-29",
             "symbol": "DEVS",
             "totalCost": 1.76
+        },
+        {
+            "date": "2024-12-02",
+            "symbol": "SNTI",
+            "totalCost": 30.562
         }
     ],
     "starting_balance": 75000
