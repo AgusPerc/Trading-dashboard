@@ -371,6 +371,30 @@
             "symbol": "PSQH",
             "type": "Short",
             "realized": 603.3302
+        },
+        {
+            "date": "2024-12-04",
+            "symbol": "CYCN",
+            "type": "Short",
+            "realized": 1029.45
+        },
+        {
+            "date": "2024-12-04",
+            "symbol": "CNEY",
+            "type": "Short",
+            "realized": 122.53
+        },
+        {
+            "date": "2024-12-04",
+            "symbol": "SRM",
+            "type": "Short",
+            "realized": 341.22
+        },
+        {
+            "date": "2024-12-04",
+            "symbol": "HTRX",
+            "type": "Short",
+            "realized": 47.74
         }
     ],
     "locates": [
@@ -668,6 +692,26 @@
             "date": "2024-12-03",
             "symbol": "PSQH",
             "totalCost": 0.38
+        },
+        {
+            "date": "2024-12-04",
+            "symbol": "CYCN",
+            "totalCost": 193.5
+        },
+        {
+            "date": "2024-12-04",
+            "symbol": "CNEY",
+            "totalCost": 23.2
+        },
+        {
+            "date": "2024-12-04",
+            "symbol": "SRM",
+            "totalCost": 23.2
+        },
+        {
+            "date": "2024-12-04",
+            "symbol": "HTRX",
+            "totalCost": 1.27
         }
     ],
     "starting_balance": 75000
