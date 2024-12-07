@@ -425,6 +425,42 @@
             "symbol": "PBM",
             "type": "Short",
             "realized": 1015.0
+        },
+        {
+            "date": "2024-12-06",
+            "symbol": "ALBT",
+            "type": "Short",
+            "realized": 1557.59
+        },
+        {
+            "date": "2024-12-06",
+            "symbol": "JFBR",
+            "type": "Short",
+            "realized": 1095.09
+        },
+        {
+            "date": "2024-12-06",
+            "symbol": "SMX",
+            "type": "Short",
+            "realized": -208.84
+        },
+        {
+            "date": "2024-12-06",
+            "symbol": "UPC",
+            "type": "Short",
+            "realized": -1755.92
+        },
+        {
+            "date": "2024-12-06",
+            "symbol": "ZBAO",
+            "type": "Short",
+            "realized": 780.96
+        },
+        {
+            "date": "2024-12-06",
+            "symbol": "GXAI",
+            "type": "Short",
+            "realized": -2018.31
         }
     ],
     "locates": [
@@ -767,6 +803,36 @@
             "date": "2024-12-05",
             "symbol": "PBM",
             "totalCost": 7.17
+        },
+        {
+            "date": "2024-12-06",
+            "symbol": "ALBT",
+            "totalCost": 29.6
+        },
+        {
+            "date": "2024-12-06",
+            "symbol": "JFBR",
+            "totalCost": 55.35
+        },
+        {
+            "date": "2024-12-06",
+            "symbol": "SMX",
+            "totalCost": 10.19
+        },
+        {
+            "date": "2024-12-06",
+            "symbol": "UPC",
+            "totalCost": 14.67
+        },
+        {
+            "date": "2024-12-06",
+            "symbol": "ZBAO",
+            "totalCost": 28.38
+        },
+        {
+            "date": "2024-12-06",
+            "symbol": "GXAI",
+            "totalCost": 11.66
         }
     ],
     "starting_balance": 75000
