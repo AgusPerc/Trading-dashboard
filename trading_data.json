@@ -461,6 +461,72 @@
             "symbol": "GXAI",
             "type": "Short",
             "realized": -2018.31
+        },
+        {
+            "date": "2024-12-09",
+            "symbol": "ASST",
+            "type": "Short",
+            "realized": -1649.51
+        },
+        {
+            "date": "2024-12-09",
+            "symbol": "DUO",
+            "type": "Short",
+            "realized": -1831.97
+        },
+        {
+            "date": "2024-12-09",
+            "symbol": "LDTC",
+            "type": "Short",
+            "realized": 443.07
+        },
+        {
+            "date": "2024-12-09",
+            "symbol": "SONN",
+            "type": "Short",
+            "realized": 792.88
+        },
+        {
+            "date": "2024-12-09",
+            "symbol": "ZEO",
+            "type": "Short",
+            "realized": -352.58
+        },
+        {
+            "date": "2024-12-09",
+            "symbol": "GXAI",
+            "type": "Short",
+            "realized": -296.32
+        },
+        {
+            "date": "2024-12-10",
+            "symbol": "BNZI",
+            "type": "Short",
+            "realized": 1052.47
+        },
+        {
+            "date": "2024-12-10",
+            "symbol": "CMRX",
+            "type": "Short",
+            "realized": -1498.89
+        },
+        {
+            "date": "2024-12-10",
+            "symbol": "CRDF",
+            "type": "Short",
+            "realized": -594.66
+        },
+        {
+            "date": "2024-12-10",
+            "symbol": "QURE",
+            "type": "Short",
+            "realized": 497.22
+        },
+        {
+            "date": "2024-12-10",
+            "symbol": "CPIX",
+            "type": "Short",
+            "realized": 546.04
         }
     ],
     "locates": [
@@ -833,6 +899,61 @@
             "date": "2024-12-06",
             "symbol": "GXAI",
             "totalCost": 11.66
+        },
+        {
+            "date": "2024-12-09",
+            "symbol": "ASST",
+            "totalCost": 7.06
+        },
+        {
+            "date": "2024-12-09",
+            "symbol": "DUO",
+            "totalCost": 4.53
+        },
+        {
+            "date": "2024-12-09",
+            "symbol": "LDTC",
+            "totalCost": 70.6
+        },
+        {
+            "date": "2024-12-09",
+            "symbol": "SONN",
+            "totalCost": 41.25
+        },
+        {
+            "date": "2024-12-09",
+            "symbol": "ZEO",
+            "totalCost": 17.38
+        },
+        {
+            "date": "2024-12-09",
+            "symbol": "GXAI",
+            "totalCost": 11.53
+        },
+        {
+            "date": "2024-12-10",
+            "symbol": "BNZI",
+            "totalCost": 42.0
+        },
+        {
+            "date": "2024-12-10",
+            "symbol": "CMRX",
+            "totalCost": 0.1
+        },
+        {
+            "date": "2024-12-10",
+            "symbol": "CRDF",
+            "totalCost": 0.18
+        },
+        {
+            "date": "2024-12-10",
+            "symbol": "QURE",
+            "totalCost": 0.1
+        },
+        {
+            "date": "2024-12-10",
+            "symbol": "CPIX",
+            "totalCost": 3.44
         }
     ],
     "starting_balance": 75000
