@@ -527,6 +527,66 @@
             "symbol": "CPIX",
             "type": "Short",
             "realized": 546.04
+        },
+        {
+            "date": "2024-12-11",
+            "symbol": "AMPG",
+            "type": "Short",
+            "realized": -1821.38
+        },
+        {
+            "date": "2024-12-11",
+            "symbol": "CADL",
+            "type": "Short",
+            "realized": 1298.2
+        },
+        {
+            "date": "2024-12-11",
+            "symbol": "NIVF",
+            "type": "Short",
+            "realized": -218.37
+        },
+        {
+            "date": "2024-12-12",
+            "symbol": "LAES",
+            "type": "Short",
+            "realized": 610.36
+        },
+        {
+            "date": "2024-12-12",
+            "symbol": "PALI",
+            "type": "Short",
+            "realized": 728.81
+        },
+        {
+            "date": "2024-12-12",
+            "symbol": "TRVI",
+            "type": "Short",
+            "realized": 467.48
+        },
+        {
+            "date": "2024-12-12",
+            "symbol": "BURU",
+            "type": "Short",
+            "realized": 995.69
+        },
+        {
+            "date": "2024-12-13",
+            "symbol": "LOOP",
+            "type": "Short",
+            "realized": 105.49
+        },
+        {
+            "date": "2024-12-13",
+            "symbol": "TRVI",
+            "type": "Short",
+            "realized": 10.11
+        },
+        {
+            "date": "2024-12-13",
+            "symbol": "TRUG",
+            "type": "Short",
+            "realized": 516.33
         }
     ],
     "locates": [
@@ -954,6 +1014,56 @@
             "date": "2024-12-10",
             "symbol": "CPIX",
             "totalCost": 3.44
+        },
+        {
+            "date": "2024-12-11",
+            "symbol": "AMPG",
+            "totalCost": 11.9
+        },
+        {
+            "date": "2024-12-11",
+            "symbol": "CADL",
+            "totalCost": 0.4
+        },
+        {
+            "date": "2024-12-11",
+            "symbol": "NIVF",
+            "totalCost": 9.06
+        },
+        {
+            "date": "2024-12-12",
+            "symbol": "LAES",
+            "totalCost": 5.68
+        },
+        {
+            "date": "2024-12-12",
+            "symbol": "PALI",
+            "totalCost": 146.95
+        },
+        {
+            "date": "2024-12-12",
+            "symbol": "TRVI",
+            "totalCost": 0.1
+        },
+        {
+            "date": "2024-12-12",
+            "symbol": "BURU",
+            "totalCost": 10.68
+        },
+        {
+            "date": "2024-12-13",
+            "symbol": "LOOP",
+            "totalCost": 2.72
+        },
+        {
+            "date": "2024-12-13",
+            "symbol": "TRVI",
+            "totalCost": 0.1
+        },
+        {
+            "date": "2024-12-13",
+            "symbol": "TRUG",
+            "totalCost": 31.77
         }
     ],
     "starting_balance": 75000
