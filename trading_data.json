@@ -611,6 +611,36 @@
             "symbol": "SIDU",
             "type": "Short",
             "realized": -1964.22
+        },
+        {
+            "date": "2024-12-17",
+            "symbol": "KWE",
+            "type": "Short",
+            "realized": 2348.62
+        },
+        {
+            "date": "2024-12-17",
+            "symbol": "NUKK",
+            "type": "Short",
+            "realized": -1078.36
+        },
+        {
+            "date": "2024-12-17",
+            "symbol": "OPTX",
+            "type": "Short",
+            "realized": -110.69
+        },
+        {
+            "date": "2024-12-17",
+            "symbol": "PRTG",
+            "type": "Short",
+            "realized": 1869.72
+        },
+        {
+            "date": "2024-12-17",
+            "symbol": "TNXP",
+            "type": "Short",
+            "realized": 1070.57
         }
     ],
     "locates": [
@@ -1108,6 +1138,31 @@
             "date": "2024-12-16",
             "symbol": "SIDU",
             "totalCost": 5.23
+        },
+        {
+            "date": "2024-12-17",
+            "symbol": "KWE",
+            "totalCost": 6.24
+        },
+        {
+            "date": "2024-12-17",
+            "symbol": "NUKK",
+            "totalCost": 30.15
+        },
+        {
+            "date": "2024-12-17",
+            "symbol": "OPTX",
+            "totalCost": 17.55
+        },
+        {
+            "date": "2024-12-17",
+            "symbol": "PRTG",
+            "totalCost": 18.15
+        },
+        {
+            "date": "2024-12-17",
+            "symbol": "TNXP",
+            "totalCost": 1.0
         }
     ],
     "starting_balance": 75000
