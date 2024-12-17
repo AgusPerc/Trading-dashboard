@@ -587,6 +587,30 @@
             "symbol": "TRUG",
             "type": "Short",
             "realized": 516.33
+        },
+        {
+            "date": "2024-12-16",
+            "symbol": "LAES",
+            "type": "Short",
+            "realized": 273.18
+        },
+        {
+            "date": "2024-12-16",
+            "symbol": "NMHI",
+            "type": "Short",
+            "realized": 169.05
+        },
+        {
+            "date": "2024-12-16",
+            "symbol": "WBUY",
+            "type": "Short",
+            "realized": 341.73
+        },
+        {
+            "date": "2024-12-16",
+            "symbol": "SIDU",
+            "type": "Short",
+            "realized": -1964.22
         }
     ],
     "locates": [
@@ -1064,6 +1088,26 @@
             "date": "2024-12-13",
             "symbol": "TRUG",
             "totalCost": 31.77
+        },
+        {
+            "date": "2024-12-16",
+            "symbol": "LAES",
+            "totalCost": 1.92
+        },
+        {
+            "date": "2024-12-16",
+            "symbol": "NMHI",
+            "totalCost": 90.25
+        },
+        {
+            "date": "2024-12-16",
+            "symbol": "WBUY",
+            "totalCost": 4.65
+        },
+        {
+            "date": "2024-12-16",
+            "symbol": "SIDU",
+            "totalCost": 5.23
         }
     ],
     "starting_balance": 75000
