@@ -641,6 +641,60 @@
             "symbol": "TNXP",
             "type": "Short",
             "realized": 1070.57
+        },
+        {
+            "date": "2024-12-18",
+            "symbol": "LITM",
+            "type": "Short",
+            "realized": -1523.0
+        },
+        {
+            "date": "2024-12-18",
+            "symbol": "CGTX",
+            "type": "Short",
+            "realized": 947.0
+        },
+        {
+            "date": "2024-12-18",
+            "symbol": "PLRZ",
+            "type": "Short",
+            "realized": 774.3
+        },
+        {
+            "date": "2024-12-18",
+            "symbol": "PRZO",
+            "type": "Short",
+            "realized": 539.0
+        },
+        {
+            "date": "2024-12-19",
+            "symbol": "APCX",
+            "type": "Short",
+            "realized": -1492.1
+        },
+        {
+            "date": "2024-12-19",
+            "symbol": "BPTH",
+            "type": "Short",
+            "realized": 1960.64
+        },
+        {
+            "date": "2024-12-19",
+            "symbol": "CURR",
+            "type": "Short",
+            "realized": 1137.03
+        },
+        {
+            "date": "2024-12-19",
+            "symbol": "XHG",
+            "type": "Short",
+            "realized": -1466.83
+        },
+        {
+            "date": "2024-12-19",
+            "symbol": "TPET",
+            "type": "Short",
+            "realized": -1593.31
         }
     ],
     "locates": [
@@ -1163,6 +1217,51 @@
             "date": "2024-12-17",
             "symbol": "TNXP",
             "totalCost": 1.0
+        },
+        {
+            "date": "2024-12-18",
+            "symbol": "LITM",
+            "totalCost": 27.0
+        },
+        {
+            "date": "2024-12-18",
+            "symbol": "CGTX",
+            "totalCost": 3.0
+        },
+        {
+            "date": "2024-12-18",
+            "symbol": "PLRZ",
+            "totalCost": 25.7
+        },
+        {
+            "date": "2024-12-18",
+            "symbol": "PRZO",
+            "totalCost": 10.0
+        },
+        {
+            "date": "2024-12-19",
+            "symbol": "APCX",
+            "totalCost": 7.41
+        },
+        {
+            "date": "2024-12-19",
+            "symbol": "BPTH",
+            "totalCost": 24.0
+        },
+        {
+            "date": "2024-12-19",
+            "symbol": "CURR",
+            "totalCost": 1.93
+        },
+        {
+            "date": "2024-12-19",
+            "symbol": "XHG",
+            "totalCost": 21.0
+        },
+        {
+            "date": "2024-12-19",
+            "symbol": "TPET",
+            "totalCost": 152.0
         }
     ],
     "starting_balance": 75000
