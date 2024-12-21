@@ -695,6 +695,42 @@
             "symbol": "TPET",
             "type": "Short",
             "realized": -1593.31
+        },
+        {
+            "date": "2024-12-20",
+            "symbol": "APTO",
+            "type": "Short",
+            "realized": -1184.1
+        },
+        {
+            "date": "2024-12-20",
+            "symbol": "HSDT",
+            "type": "Short",
+            "realized": 882.35
+        },
+        {
+            "date": "2024-12-20",
+            "symbol": "LYT",
+            "type": "Short",
+            "realized": 2513.95
+        },
+        {
+            "date": "2024-12-20",
+            "symbol": "NVNI",
+            "type": "Short",
+            "realized": 924.3
+        },
+        {
+            "date": "2024-12-20",
+            "symbol": "TAOP",
+            "type": "Short",
+            "realized": 2058.22
+        },
+        {
+            "date": "2024-12-20",
+            "symbol": "MYSZ",
+            "type": "Short",
+            "realized": 993.73
         }
     ],
     "locates": [
@@ -1262,6 +1298,36 @@
             "date": "2024-12-19",
             "symbol": "TPET",
             "totalCost": 152.0
+        },
+        {
+            "date": "2024-12-20",
+            "symbol": "APTO",
+            "totalCost": 2.07
+        },
+        {
+            "date": "2024-12-20",
+            "symbol": "HSDT",
+            "totalCost": 5.17
+        },
+        {
+            "date": "2024-12-20",
+            "symbol": "LYT",
+            "totalCost": 5.63
+        },
+        {
+            "date": "2024-12-20",
+            "symbol": "NVNI",
+            "totalCost": 49.3
+        },
+        {
+            "date": "2024-12-20",
+            "symbol": "TAOP",
+            "totalCost": 8.44
+        },
+        {
+            "date": "2024-12-20",
+            "symbol": "MYSZ",
+            "totalCost": 47.67
         }
     ],
     "starting_balance": 75000
