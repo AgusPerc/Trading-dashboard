@@ -731,6 +731,150 @@
             "symbol": "MYSZ",
             "type": "Short",
             "realized": 993.73
+        },
+        {
+            "date": "2024-12-23",
+            "symbol": "EDBL",
+            "type": "Short",
+            "realized": -1400.46
+        },
+        {
+            "date": "2024-12-23",
+            "symbol": "PIK",
+            "type": "Short",
+            "realized": 1674.9
+        },
+        {
+            "date": "2024-12-23",
+            "symbol": "RAPT",
+            "type": "Short",
+            "realized": -1673.65
+        },
+        {
+            "date": "2024-12-23",
+            "symbol": "RELI",
+            "type": "Short",
+            "realized": -1631.16
+        },
+        {
+            "date": "2024-12-23",
+            "symbol": "TRAW",
+            "type": "Short",
+            "realized": -1599.31
+        },
+        {
+            "date": "2024-12-23",
+            "symbol": "GTBP",
+            "type": "Short",
+            "realized": -1482.1
+        },
+        {
+            "date": "2024-12-24",
+            "symbol": "BAOS",
+            "type": "Short",
+            "realized": -850.46
+        },
+        {
+            "date": "2024-12-24",
+            "symbol": "CMND",
+            "type": "Short",
+            "realized": 279.0
+        },
+        {
+            "date": "2024-12-24",
+            "symbol": "CREV",
+            "type": "Short",
+            "realized": -1137.84
+        },
+        {
+            "date": "2024-12-24",
+            "symbol": "CTCX",
+            "type": "Short",
+            "realized": 28.64
+        },
+        {
+            "date": "2024-12-24",
+            "symbol": "JTAI",
+            "type": "Short",
+            "realized": 1307.79
+        },
+        {
+            "date": "2024-12-24",
+            "symbol": "AVGR",
+            "type": "Short",
+            "realized": -1581.43
+        },
+        {
+            "date": "2024-12-26",
+            "symbol": "COEP",
+            "type": "Short",
+            "realized": 940.65
+        },
+        {
+            "date": "2024-12-26",
+            "symbol": "MGIH",
+            "type": "Short",
+            "realized": 1718.78
+        },
+        {
+            "date": "2024-12-26",
+            "symbol": "SMX",
+            "type": "Short",
+            "realized": -118.69
+        },
+        {
+            "date": "2024-12-26",
+            "symbol": "SPRC",
+            "type": "Short",
+            "realized": 740.15
+        },
+        {
+            "date": "2024-12-26",
+            "symbol": "ZCAR",
+            "type": "Short",
+            "realized": 1073.15
+        },
+        {
+            "date": "2024-12-26",
+            "symbol": "ADD",
+            "type": "Short",
+            "realized": 395.68
+        },
+        {
+            "date": "2024-12-27",
+            "symbol": "AILE",
+            "type": "Short",
+            "realized": -1578.31
+        },
+        {
+            "date": "2024-12-27",
+            "symbol": "INTZ",
+            "type": "Short",
+            "realized": -1604.81
+        },
+        {
+            "date": "2024-12-27",
+            "symbol": "QSI",
+            "type": "Short",
+            "realized": -540.74
+        },
+        {
+            "date": "2024-12-27",
+            "symbol": "SES",
+            "type": "Short",
+            "realized": 298.2
+        },
+        {
+            "date": "2024-12-27",
+            "symbol": "WIMI",
+            "type": "Short",
+            "realized": 481.56
+        },
+        {
+            "date": "2024-12-27",
+            "symbol": "MYSZ",
+            "type": "Short",
+            "realized": 451.2
         }
     ],
     "locates": [
@@ -1328,6 +1472,126 @@
             "date": "2024-12-20",
             "symbol": "MYSZ",
             "totalCost": 47.67
+        },
+        {
+            "date": "2024-12-23",
+            "symbol": "EDBL",
+            "totalCost": 5.6
+        },
+        {
+            "date": "2024-12-23",
+            "symbol": "PIK",
+            "totalCost": 13.83
+        },
+        {
+            "date": "2024-12-23",
+            "symbol": "RAPT",
+            "totalCost": 2.4
+        },
+        {
+            "date": "2024-12-23",
+            "symbol": "RELI",
+            "totalCost": 20.0
+        },
+        {
+            "date": "2024-12-23",
+            "symbol": "TRAW",
+            "totalCost": 0.56
+        },
+        {
+            "date": "2024-12-23",
+            "symbol": "GTBP",
+            "totalCost": 25.58
+        },
+        {
+            "date": "2024-12-24",
+            "symbol": "BAOS",
+            "totalCost": 0.19
+        },
+        {
+            "date": "2024-12-24",
+            "symbol": "CMND",
+            "totalCost": 0.56
+        },
+        {
+            "date": "2024-12-24",
+            "symbol": "CREV",
+            "totalCost": 52.25
+        },
+        {
+            "date": "2024-12-24",
+            "symbol": "CTCX",
+            "totalCost": 12.0
+        },
+        {
+            "date": "2024-12-24",
+            "symbol": "JTAI",
+            "totalCost": 3.2
+        },
+        {
+            "date": "2024-12-24",
+            "symbol": "AVGR",
+            "totalCost": 3.44
+        },
+        {
+            "date": "2024-12-26",
+            "symbol": "COEP",
+            "totalCost": 34.4
+        },
+        {
+            "date": "2024-12-26",
+            "symbol": "MGIH",
+            "totalCost": 12.8
+        },
+        {
+            "date": "2024-12-26",
+            "symbol": "SMX",
+            "totalCost": 3.75
+        },
+        {
+            "date": "2024-12-26",
+            "symbol": "SPRC",
+            "totalCost": 47.5
+        },
+        {
+            "date": "2024-12-26",
+            "symbol": "ZCAR",
+            "totalCost": 14.1
+        },
+        {
+            "date": "2024-12-26",
+            "symbol": "ADD",
+            "totalCost": 24.0
+        },
+        {
+            "date": "2024-12-27",
+            "symbol": "AILE",
+            "totalCost": 115.0
+        },
+        {
+            "date": "2024-12-27",
+            "symbol": "INTZ",
+            "totalCost": 3.2
+        },
+        {
+            "date": "2024-12-27",
+            "symbol": "QSI",
+            "totalCost": 0.12
+        },
+        {
+            "date": "2024-12-27",
+            "symbol": "SES",
+            "totalCost": 0.12
+        },
+        {
+            "date": "2024-12-27",
+            "symbol": "WIMI",
+            "totalCost": 0.85
+        },
+        {
+            "date": "2024-12-27",
+            "symbol": "MYSZ",
+            "totalCost": 0.34
         }
     ],
     "starting_balance": 75000
