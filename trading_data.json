@@ -875,6 +875,186 @@
             "symbol": "MYSZ",
             "type": "Short",
             "realized": 451.2
+        },
+        {
+            "date": "2024-12-30",
+            "symbol": "INTZ",
+            "type": "Short",
+            "realized": 629.31
+        },
+        {
+            "date": "2024-12-30",
+            "symbol": "NXU",
+            "type": "Short",
+            "realized": -1078.12
+        },
+        {
+            "date": "2024-12-30",
+            "symbol": "OCTO",
+            "type": "Short",
+            "realized": -536.58
+        },
+        {
+            "date": "2024-12-30",
+            "symbol": "PLRZ",
+            "type": "Short",
+            "realized": 23.92
+        },
+        {
+            "date": "2024-12-30",
+            "symbol": "WATT",
+            "type": "Short",
+            "realized": -1174.72
+        },
+        {
+            "date": "2024-12-30",
+            "symbol": "HOLO",
+            "type": "Short",
+            "realized": 134.0
+        },
+        {
+            "date": "2024-12-31",
+            "symbol": "APM",
+            "type": "Short",
+            "realized": -2744.45
+        },
+        {
+            "date": "2024-12-31",
+            "symbol": "EYEN",
+            "type": "Short",
+            "realized": 180.86
+        },
+        {
+            "date": "2024-12-31",
+            "symbol": "ITP",
+            "type": "Short",
+            "realized": 1346.0
+        },
+        {
+            "date": "2024-12-31",
+            "symbol": "MLGO",
+            "type": "Short",
+            "realized": 2607.24
+        },
+        {
+            "date": "2024-12-31",
+            "symbol": "ONCO",
+            "type": "Short",
+            "realized": -2000.24
+        },
+        {
+            "date": "2024-12-31",
+            "symbol": "VRME",
+            "type": "Short",
+            "realized": -1974.31
+        },
+        {
+            "date": "2025-01-02",
+            "symbol": "AEI",
+            "type": "Short",
+            "realized": 594.4
+        },
+        {
+            "date": "2025-01-02",
+            "symbol": "CGBS",
+            "type": "Short",
+            "realized": 1023.03
+        },
+        {
+            "date": "2025-01-02",
+            "symbol": "CTCX",
+            "type": "Short",
+            "realized": -1919.3
+        },
+        {
+            "date": "2025-01-02",
+            "symbol": "NITO",
+            "type": "Short",
+            "realized": -2402.73
+        },
+        {
+            "date": "2025-01-02",
+            "symbol": "ORIS",
+            "type": "Short",
+            "realized": 357.61
+        },
+        {
+            "date": "2025-01-02",
+            "symbol": "REVB",
+            "type": "Short",
+            "realized": 1180.53
+        },
+        {
+            "date": "2025-01-03",
+            "symbol": "CYCC",
+            "type": "Short",
+            "realized": 721.4
+        },
+        {
+            "date": "2025-01-03",
+            "symbol": "MFI",
+            "type": "Short",
+            "realized": 137.59
+        },
+        {
+            "date": "2025-01-03",
+            "symbol": "MGOL",
+            "type": "Short",
+            "realized": -40.3
+        },
+        {
+            "date": "2025-01-03",
+            "symbol": "NITO",
+            "type": "Short",
+            "realized": -1511.63
+        },
+        {
+            "date": "2025-01-03",
+            "symbol": "SCPX",
+            "type": "Short",
+            "realized": 1812.2
+        },
+        {
+            "date": "2025-01-03",
+            "symbol": "TGL",
+            "type": "Short",
+            "realized": 541.05
+        },
+        {
+            "date": "2025-01-06",
+            "symbol": "ARBE",
+            "type": "Short",
+            "realized": 182.88
+        },
+        {
+            "date": "2025-01-06",
+            "symbol": "FUBO",
+            "type": "Short",
+            "realized": -839.59
+        },
+        {
+            "date": "2025-01-06",
+            "symbol": "KITT",
+            "type": "Short",
+            "realized": 766.73
+        },
+        {
+            "date": "2025-01-06",
+            "symbol": "MEGL",
+            "type": "Short",
+            "realized": 1.71
+        },
+        {
+            "date": "2025-01-06",
+            "symbol": "RHE",
+            "type": "Short",
+            "realized": 1419.32
+        },
+        {
+            "date": "2025-01-06",
+            "symbol": "SPRC",
+            "type": "Short",
+            "realized": -1218.81
         }
     ],
     "locates": [
@@ -1592,6 +1772,146 @@
             "date": "2024-12-27",
             "symbol": "MYSZ",
             "totalCost": 0.34
+        },
+        {
+            "date": "2024-12-30",
+            "symbol": "INTZ",
+            "totalCost": 5.34
+        },
+        {
+            "date": "2024-12-30",
+            "symbol": "NXU",
+            "totalCost": 4.5
+        },
+        {
+            "date": "2024-12-30",
+            "symbol": "OCTO",
+            "totalCost": 8.0
+        },
+        {
+            "date": "2024-12-30",
+            "symbol": "PLRZ",
+            "totalCost": 18.0
+        },
+        {
+            "date": "2024-12-30",
+            "symbol": "WATT",
+            "totalCost": 6.0
+        },
+        {
+            "date": "2024-12-30",
+            "symbol": "HOLO",
+            "totalCost": 0.45
+        },
+        {
+            "date": "2024-12-31",
+            "symbol": "APM",
+            "totalCost": 13.95
+        },
+        {
+            "date": "2024-12-31",
+            "symbol": "EYEN",
+            "totalCost": 3.5
+        },
+        {
+            "date": "2024-12-31",
+            "symbol": "ITP",
+            "totalCost": 0.2
+        },
+        {
+            "date": "2024-12-31",
+            "symbol": "MLGO",
+            "totalCost": 9.38
+        },
+        {
+            "date": "2024-12-31",
+            "symbol": "ONCO",
+            "totalCost": 15.2
+        },
+        {
+            "date": "2024-12-31",
+            "symbol": "VRME",
+            "totalCost": 8.0
+        },
+        {
+            "date": "2025-01-02",
+            "symbol": "AEI",
+            "totalCost": 6.72
+        },
+        {
+            "date": "2025-01-02",
+            "symbol": "CGBS",
+            "totalCost": 8.0
+        },
+        {
+            "date": "2025-01-02",
+            "symbol": "CTCX",
+            "totalCost": 10.0
+        },
+        {
+            "date": "2025-01-02",
+            "symbol": "NITO",
+            "totalCost": 16.62
+        },
+        {
+            "date": "2025-01-02",
+            "symbol": "ORIS",
+            "totalCost": 2.88
+        },
+        {
+            "date": "2025-01-02",
+            "symbol": "REVB",
+            "totalCost": 7.2
+        },
+        {
+            "date": "2025-01-03",
+            "symbol": "CYCC",
+            "totalCost": 7.44
+        },
+        {
+            "date": "2025-01-03",
+            "symbol": "MFI",
+            "totalCost": 3.0
+        },
+        {
+            "date": "2025-01-03",
+            "symbol": "MGOL",
+            "totalCost": 6.72
+        },
+        {
+            "date": "2025-01-03",
+            "symbol": "NITO",
+            "totalCost": 17.51
+        },
+        {
+            "date": "2025-01-03",
+            "symbol": "SCPX",
+            "totalCost": 17.6
+        },
+        {
+            "date": "2025-01-03",
+            "symbol": "TGL",
+            "totalCost": 7.44
+        },
+        {
+            "date": "2025-01-06",
+            "symbol": "KITT",
+            "totalCost": 0.68
+        },
+        {
+            "date": "2025-01-06",
+            "symbol": "MEGL",
+            "totalCost": 1.3
+        },
+        {
+            "date": "2025-01-06",
+            "symbol": "RHE",
+            "totalCost": 0.96
+        },
+        {
+            "date": "2025-01-06",
+            "symbol": "SPRC",
+            "totalCost": 4.16
         }
     ],
     "starting_balance": 75000
