@@ -1055,6 +1055,36 @@
             "symbol": "SPRC",
             "type": "Short",
             "realized": -1218.81
+        },
+        {
+            "date": "2025-01-07",
+            "symbol": "HOTH",
+            "type": "Short",
+            "realized": -2114.648
+        },
+        {
+            "date": "2025-01-07",
+            "symbol": "IMRX",
+            "type": "Short",
+            "realized": 1421.47
+        },
+        {
+            "date": "2025-01-07",
+            "symbol": "MSAI",
+            "type": "Short",
+            "realized": 53.5
+        },
+        {
+            "date": "2025-01-07",
+            "symbol": "XTIA",
+            "type": "Short",
+            "realized": 1011.97
+        },
+        {
+            "date": "2025-01-07",
+            "symbol": "CDT",
+            "type": "Short",
+            "realized": -6.07
         }
     ],
     "locates": [
@@ -1912,6 +1942,31 @@
             "date": "2025-01-06",
             "symbol": "SPRC",
             "totalCost": 4.16
+        },
+        {
+            "date": "2025-01-07",
+            "symbol": "HOTH",
+            "totalCost": 0.77
+        },
+        {
+            "date": "2025-01-07",
+            "symbol": "IMRX",
+            "totalCost": 0.26
+        },
+        {
+            "date": "2025-01-07",
+            "symbol": "MSAI",
+            "totalCost": 0.31
+        },
+        {
+            "date": "2025-01-07",
+            "symbol": "XTIA",
+            "totalCost": 3.75
+        },
+        {
+            "date": "2025-01-07",
+            "symbol": "CDT",
+            "totalCost": 3.47
         }
     ],
     "starting_balance": 75000
