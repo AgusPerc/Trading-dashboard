@@ -1157,6 +1157,54 @@
             "symbol": "ATPC",
             "type": "Short",
             "realized": -232.09
+        },
+        {
+            "date": "2025-01-14",
+            "symbol": "AIFF",
+            "type": "Short",
+            "realized": 1352.61
+        },
+        {
+            "date": "2025-01-14",
+            "symbol": "NMHI",
+            "type": "Short",
+            "realized": 2338.43
+        },
+        {
+            "date": "2025-01-14",
+            "symbol": "STAF",
+            "type": "Short",
+            "realized": -252.87
+        },
+        {
+            "date": "2025-01-14",
+            "symbol": "ERNA",
+            "type": "Short",
+            "realized": -2126.38
+        },
+        {
+            "date": "2025-01-15",
+            "symbol": "SGBX",
+            "type": "Short",
+            "realized": 1514.8
+        },
+        {
+            "date": "2025-01-16",
+            "symbol": "WHLR",
+            "type": "Short",
+            "realized": -16.37
+        },
+        {
+            "date": "2025-01-16",
+            "symbol": "BMRA",
+            "type": "Short",
+            "realized": 507.57
+        },
+        {
+            "date": "2025-01-17",
+            "symbol": "VS",
+            "type": "Short",
+            "realized": -204.14
         }
     ],
     "locates": [
@@ -2079,6 +2127,46 @@
             "date": "2025-01-10",
             "symbol": "ZVSA",
             "totalCost": 3.2
+        },
+        {
+            "date": "2025-01-14",
+            "symbol": "AIFF",
+            "totalCost": 15.54
+        },
+        {
+            "date": "2025-01-14",
+            "symbol": "NMHI",
+            "totalCost": 20.16
+        },
+        {
+            "date": "2025-01-14",
+            "symbol": "STAF",
+            "totalCost": 4.6
+        },
+        {
+            "date": "2025-01-14",
+            "symbol": "ERNA",
+            "totalCost": 4.6
+        },
+        {
+            "date": "2025-01-15",
+            "symbol": "SGBX",
+            "totalCost": 15.8
+        },
+        {
+            "date": "2025-01-16",
+            "symbol": "WHLR",
+            "totalCost": 0.37
+        },
+        {
+            "date": "2025-01-16",
+            "symbol": "BMRA",
+            "totalCost": 2.82
+        },
+        {
+            "date": "2025-01-17",
+            "symbol": "VS",
+            "totalCost": 25.22
         }
     ],
     "starting_balance": 75000
