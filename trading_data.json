@@ -1205,6 +1205,30 @@
             "symbol": "VS",
             "type": "Short",
             "realized": -204.14
+        },
+        {
+            "date": "2025-01-21",
+            "symbol": "ASST",
+            "type": "Short",
+            "realized": 628.06
+        },
+        {
+            "date": "2025-01-22",
+            "symbol": "BLBX",
+            "type": "Short",
+            "realized": 389.57
+        },
+        {
+            "date": "2025-01-23",
+            "symbol": "VNCE",
+            "type": "Short",
+            "realized": 259.77
+        },
+        {
+            "date": "2025-01-23",
+            "symbol": "DGNX",
+            "type": "Short",
+            "realized": 3743.01
         }
     ],
     "locates": [
@@ -2167,6 +2191,26 @@
             "date": "2025-01-17",
             "symbol": "VS",
             "totalCost": 25.22
+        },
+        {
+            "date": "2025-01-21",
+            "symbol": "ASST",
+            "totalCost": 6.35
+        },
+        {
+            "date": "2025-01-22",
+            "symbol": "BLBX",
+            "totalCost": 5.89
+        },
+        {
+            "date": "2025-01-23",
+            "symbol": "VNCE",
+            "totalCost": 7.5
+        },
+        {
+            "date": "2025-01-23",
+            "symbol": "DGNX",
+            "totalCost": 197.25
         }
     ],
     "starting_balance": 75000
