@@ -1229,6 +1229,36 @@
             "symbol": "DGNX",
             "type": "Short",
             "realized": 3743.01
+        },
+        {
+            "date": "2025-01-24",
+            "symbol": "ELAB",
+            "type": "Short",
+            "realized": -381.8
+        },
+        {
+            "date": "2025-01-24",
+            "symbol": "EVAX",
+            "type": "Short",
+            "realized": 603.26
+        },
+        {
+            "date": "2025-01-24",
+            "symbol": "STBX",
+            "type": "Short",
+            "realized": -332.12
+        },
+        {
+            "date": "2025-01-24",
+            "symbol": "ALUR",
+            "type": "Short",
+            "realized": 1737.97
+        },
+        {
+            "date": "2025-01-27",
+            "symbol": "JG",
+            "type": "Short",
+            "realized": -2266.42
         }
     ],
     "locates": [
@@ -2211,6 +2241,26 @@
             "date": "2025-01-23",
             "symbol": "DGNX",
             "totalCost": 197.25
+        },
+        {
+            "date": "2025-01-24",
+            "symbol": "ELAB",
+            "totalCost": 8.37
+        },
+        {
+            "date": "2025-01-24",
+            "symbol": "EVAX",
+            "totalCost": 78.0
+        },
+        {
+            "date": "2025-01-24",
+            "symbol": "STBX",
+            "totalCost": 40.84
+        },
+        {
+            "date": "2025-01-24",
+            "symbol": "ALUR",
+            "totalCost": 56.25
         }
     ],
     "starting_balance": 75000
