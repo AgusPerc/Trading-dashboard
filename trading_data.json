@@ -1259,6 +1259,24 @@
             "symbol": "JG",
             "type": "Short",
             "realized": -2266.42
+        },
+        {
+            "date": "2025-01-28",
+            "symbol": "DXF",
+            "type": "Short",
+            "realized": 1565.99
+        },
+        {
+            "date": "2025-01-28",
+            "symbol": "SLXN",
+            "type": "Short",
+            "realized": -2991.84
+        },
+        {
+            "date": "2025-01-28",
+            "symbol": "YIBO",
+            "type": "Short",
+            "realized": -134.98
         }
     ],
     "locates": [
@@ -2261,6 +2279,21 @@
             "date": "2025-01-24",
             "symbol": "ALUR",
             "totalCost": 56.25
+        },
+        {
+            "date": "2025-01-28",
+            "symbol": "DXF",
+            "totalCost": 1.53
+        },
+        {
+            "date": "2025-01-28",
+            "symbol": "SLXN",
+            "totalCost": 21.25
+        },
+        {
+            "date": "2025-01-28",
+            "symbol": "YIBO",
+            "totalCost": 18.08
         }
     ],
     "starting_balance": 75000
