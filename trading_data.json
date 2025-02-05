@@ -1277,6 +1277,66 @@
             "symbol": "YIBO",
             "type": "Short",
             "realized": -134.98
+        },
+        {
+            "date": "2025-01-29",
+            "symbol": "OCEA",
+            "type": "Short",
+            "realized": 976.8
+        },
+        {
+            "date": "2025-01-30",
+            "symbol": "ATHE",
+            "type": "Short",
+            "realized": -178.48
+        },
+        {
+            "date": "2025-01-30",
+            "symbol": "AMOD",
+            "type": "Short",
+            "realized": -2597.91
+        },
+        {
+            "date": "2025-01-31",
+            "symbol": "SGN",
+            "type": "Short",
+            "realized": 194.83
+        },
+        {
+            "date": "2025-01-31",
+            "symbol": "TCTM",
+            "type": "Short",
+            "realized": -2031.13
+        },
+        {
+            "date": "2025-02-03",
+            "symbol": "UOKA",
+            "type": "Short",
+            "realized": 784.26
+        },
+        {
+            "date": "2025-02-03",
+            "symbol": "HCWB",
+            "type": "Short",
+            "realized": 1462.88
+        },
+        {
+            "date": "2025-02-04",
+            "symbol": "AZTR",
+            "type": "Short",
+            "realized": 178.12
+        },
+        {
+            "date": "2025-02-04",
+            "symbol": "VLCN",
+            "type": "Short",
+            "realized": 2269.89
+        },
+        {
+            "date": "2025-02-04",
+            "symbol": "QNTM",
+            "type": "Short",
+            "realized": -333.31
         }
     ],
     "locates": [
@@ -2294,6 +2354,56 @@
             "date": "2025-01-28",
             "symbol": "YIBO",
             "totalCost": 18.08
+        },
+        {
+            "date": "2025-01-29",
+            "symbol": "OCEA",
+            "totalCost": 5.8
+        },
+        {
+            "date": "2025-01-30",
+            "symbol": "ATHE",
+            "totalCost": 5.0
+        },
+        {
+            "date": "2025-01-30",
+            "symbol": "AMOD",
+            "totalCost": 28.49
+        },
+        {
+            "date": "2025-01-31",
+            "symbol": "SGN",
+            "totalCost": 39.812
+        },
+        {
+            "date": "2025-01-31",
+            "symbol": "TCTM",
+            "totalCost": 16.0
+        },
+        {
+            "date": "2025-02-03",
+            "symbol": "UOKA",
+            "totalCost": 24.88
+        },
+        {
+            "date": "2025-02-03",
+            "symbol": "HCWB",
+            "totalCost": 9.528
+        },
+        {
+            "date": "2025-02-04",
+            "symbol": "AZTR",
+            "totalCost": 14.292
+        },
+        {
+            "date": "2025-02-04",
+            "symbol": "VLCN",
+            "totalCost": 159.75
+        },
+        {
+            "date": "2025-02-04",
+            "symbol": "QNTM",
+            "totalCost": 6.0
         }
     ],
     "starting_balance": 75000
