@@ -1337,6 +1337,18 @@
             "symbol": "QNTM",
             "type": "Short",
             "realized": -333.31
+        },
+        {
+            "date": "2025-02-05",
+            "symbol": "KTTA",
+            "type": "Short",
+            "realized": 210.4
+        },
+        {
+            "date": "2025-02-05",
+            "symbol": "OGEN",
+            "type": "Short",
+            "realized": -160.14
         }
     ],
     "locates": [
@@ -2404,6 +2416,16 @@
             "date": "2025-02-04",
             "symbol": "QNTM",
             "totalCost": 6.0
+        },
+        {
+            "date": "2025-02-05",
+            "symbol": "KTTA",
+            "totalCost": 17.28
+        },
+        {
+            "date": "2025-02-05",
+            "symbol": "OGEN",
+            "totalCost": 1.28
         }
     ],
     "starting_balance": 75000
