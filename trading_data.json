@@ -1385,6 +1385,18 @@
             "symbol": "DOMH",
             "type": "Short",
             "realized": -391.47
+        },
+        {
+            "date": "2025-02-12",
+            "symbol": "XLO",
+            "type": "Short",
+            "realized": 706.21
+        },
+        {
+            "date": "2025-02-12",
+            "symbol": "NXU",
+            "type": "Short",
+            "realized": 204.36
         }
     ],
     "locates": [
@@ -2492,6 +2504,16 @@
             "date": "2025-02-11",
             "symbol": "DOMH",
             "totalCost": 1.25
+        },
+        {
+            "date": "2025-02-12",
+            "symbol": "XLO",
+            "totalCost": 4.8
+        },
+        {
+            "date": "2025-02-12",
+            "symbol": "NXU",
+            "totalCost": 94.05
         }
     ],
     "starting_balance": 75000
