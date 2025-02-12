@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import plotly.graph_objects as go
 from datetime import datetime
 import json
@@ -12,194 +13,10 @@ from matplotlib.gridspec import GridSpec
 import tempfile
 import os
 import pytz
+import scipy.stats as stats
 
 # Set page configuration
 st.set_page_config(page_title="Trading Dashboard", layout="wide")
-
-class DashboardPDF(FPDF):
-    def __init__(self):
-        super().__init__()
-        self.set_auto_page_break(auto=True, margin=15)
-        
-    def header(self):
-        # Modern header with background color
-        self.set_fill_color(47, 73, 95)  # Dark blue background
-        self.rect(0, 0, 210, 20, 'F')
-        self.set_font('Arial', 'B', 15)
-        self.set_text_color(255, 255, 255)  # White text
-        self.cell(0, 20, 'Trading Performance Dashboard', 0, 1, 'C', True)
-        self.ln(5)
-
-    def footer(self):
-        self.set_y(-15)
-        self.set_font('Arial', 'I', 8)
-        self.set_text_color(128, 128, 128)  # Gray text
-        self.cell(0, 10, f'Generated on {datetime.now().strftime("%Y-%m-%d %H:%M")} | Page {self.page_no()}', 0, 0, 'C')
-
-    def add_metric_box(self, title, value, delta=None):
-        self.set_fill_color(245, 245, 245)  # Light gray background
-        self.rect(self.get_x(), self.get_y(), 60, 25, 'F')
-        self.set_font('Arial', 'B', 10)
-        self.set_text_color(70, 70, 70)
-        self.cell(60, 10, title, 0, 2, 'L')
-        self.set_font('Arial', 'B', 12)
-        self.set_text_color(0, 0, 0)
-        value_text = f"${value:,.2f}"
-        self.cell(60, 8, value_text, 0, 1, 'L')
-        if delta:
-            self.set_font('Arial', '', 10)
-            color = (0, 150, 0) if delta >= 0 else (150, 0, 0)
-            self.set_text_color(*color)
-            self.cell(60, 8, f"({delta:+.2f}%)", 0, 1, 'L')
-        self.ln(5)
-
-    def add_table(self, headers, data, title):
-        self.set_font('Arial', 'B', 12)
-        self.set_text_color(47, 73, 95)
-        self.cell(0, 10, title, 0, 1, 'L')
-        self.ln(2)
-        
-        # Calculate column widths
-        col_widths = [40] * len(headers)
-        
-        # Table header
-        self.set_font('Arial', 'B', 10)
-        self.set_fill_color(47, 73, 95)
-        self.set_text_color(255, 255, 255)
-        for i, header in enumerate(headers):
-            self.cell(col_widths[i], 8, header, 1, 0, 'C', True)
-        self.ln()
-        
-        # Table data
-        self.set_font('Arial', '', 9)
-        self.set_text_color(0, 0, 0)
-        for row in data:
-            for i, item in enumerate(row):
-                if isinstance(item, (int, float)):
-                    text = f"${item:,.2f}" if i == len(row)-1 else f"{item:,.2f}"
-                else:
-                    text = str(item)
-                self.cell(col_widths[i], 7, text, 1, 0, 'C')
-            self.ln()
-        self.ln(5)
-
-def calculate_latest_daily_pnl(trades, starting_balance):
-    if not trades:
-        return 0, 0, "No trades"
-    
-    trades_df = pd.DataFrame(trades)
-    trades_df['date'] = pd.to_datetime(trades_df['date'])
-    latest_date = trades_df['date'].max()
-    latest_pnl = trades_df[trades_df['date'] == latest_date]['realized'].sum()
-    
-    # Calculate daily percentage return based on starting balance
-    daily_return_percent = (latest_pnl / starting_balance) * 100
-    
-    return latest_pnl, daily_return_percent, latest_date.strftime("%Y-%m-%d")
-
-def create_pnl_chart(trades_df):
-    plt.figure(figsize=(10, 4))
-    daily_pnl = trades_df.groupby('date')['realized'].sum().cumsum()
-    
-    plt.plot(daily_pnl.index, daily_pnl.values, marker='o', linewidth=2, color='#2E4B5F')
-    plt.fill_between(daily_pnl.index, daily_pnl.values, alpha=0.2, color='#2E4B5F')
-    
-    plt.title('Cumulative P&L Over Time', fontsize=12, pad=15)
-    plt.xlabel('Date', fontsize=10)
-    plt.ylabel('Cumulative P&L ($)', fontsize=10)
-    plt.grid(True, alpha=0.3)
-    plt.xticks(rotation=45)
-    
-    # Save plot to temporary file
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as tmp_file:
-        plt.savefig(tmp_file.name, format='png', dpi=300, bbox_inches='tight')
-        plt.close()
-        return tmp_file.name
-
-def create_dashboard_pdf(data):
-    pdf = DashboardPDF()
-    pdf.add_page()
-    
-    # Calculate summary statistics
-    starting_balance = data.get('starting_balance', 50000)
-    total_realized = sum(trade['realized'] for trade in data['trades'])
-    total_locate_cost = sum(locate['totalCost'] for locate in data['locates'])
-    net_pnl = total_realized - total_locate_cost
-    ending_balance = starting_balance + net_pnl
-    return_percent = (net_pnl / starting_balance) * 100 if starting_balance else 0
-    latest_daily_pnl, daily_return_percent, latest_date = calculate_latest_daily_pnl(data['trades'], starting_balance)
-    
-    # Add metrics section
-    pdf.add_metric_box("Starting Balance", starting_balance)
-    pdf.set_x(75)
-    pdf.set_y(pdf.get_y() - 30)
-    pdf.add_metric_box("Net P&L", net_pnl, return_percent)
-    pdf.set_x(140)
-    pdf.set_y(pdf.get_y() - 30)
-    pdf.add_metric_box("Ending Balance", ending_balance)
-    pdf.set_x(205)
-    pdf.set_y(pdf.get_y() - 30)
-    if latest_date != "No trades":
-        pdf.add_metric_box(f"Daily P&L ({latest_date})", latest_daily_pnl, daily_return_percent)
-    
-    # Add P&L chart if there are trades
-    if data['trades']:
-        trades_df = pd.DataFrame(data['trades'])
-        trades_df['date'] = pd.to_datetime(trades_df['date'])
-        
-        # Create and add the P&L chart
-        chart_path = create_pnl_chart(trades_df)
-        try:
-            pdf.image(chart_path, x=10, y=None, w=190)
-            pdf.ln(10)
-        finally:
-            # Clean up temporary file
-            if os.path.exists(chart_path):
-                os.unlink(chart_path)
-        
-        # Add trades summary
-        trades_data = [
-            [trade['date'], trade['symbol'], trade['type'], trade['realized']]
-            for trade in sorted(data['trades'], key=lambda x: x['date'], reverse=True)
-        ]
-        pdf.add_table(
-            ['Date', 'Symbol', 'Type', 'P&L'],
-            trades_data,
-            'Trades Summary'
-        )
-    
-    # Add new page for locates if needed
-    if len(data['trades']) > 5:
-        pdf.add_page()
-    
-    # Add locates summary
-    if data['locates']:
-        locates_data = [
-            [locate['date'], locate['symbol'], locate['totalCost']]
-            for locate in sorted(data['locates'], key=lambda x: x['date'], reverse=True)
-        ]
-        pdf.add_table(
-            ['Date', 'Symbol', 'Cost'],
-            locates_data,
-            'Locates Summary'
-        )
-    
-    # Add daily summary
-    if data['trades']:
-        trades_df = pd.DataFrame(data['trades'])
-        trades_df['date'] = pd.to_datetime(trades_df['date'])
-        daily_summary = trades_df.groupby('date')['realized'].sum()
-        daily_data = [
-            [date.strftime('%Y-%m-%d'), pnl]
-            for date, pnl in daily_summary.items()
-        ]
-        pdf.add_table(
-            ['Date', 'Daily P&L'],
-            daily_data,
-            'Daily Summary'
-        )
-    
-    return pdf.output(dest='S').encode('latin-1')
 
 # Function to load data from JSON file
 def load_data():
@@ -218,145 +35,722 @@ def save_data(data):
     with open('trading_data.json', 'w') as f:
         json.dump(data, f, indent=4)
 
-# Load existing data
-data = load_data()
+# [Previous functions remain the same until calculate_weekly_stats]
 
-# Sidebar for adding new entries
-st.sidebar.title("Add New Trade")
-
-# Combined trade and locate input
-mexico_tz = pytz.timezone('America/Mexico_City')
-mexico_now = datetime.now(pytz.UTC).astimezone(mexico_tz)
-trade_date = st.sidebar.date_input("Date", mexico_now)
-trade_symbol = st.sidebar.text_input("Symbol")
-trade_type = st.sidebar.selectbox("Type", ["Long", "Short"])
-trade_realized = st.sidebar.number_input("Realized P&L")
-locate_cost = st.sidebar.number_input("Locate Cost", min_value=0.0)
-
-if st.sidebar.button("Add Trade"):
-    # Format date as string
-    date_str = trade_date.strftime("%Y-%m-%d")
+def calculate_weekly_detailed_stats(trades_df, week_start_date, starting_balance):
+    # Filter trades for the specific week
+    week_end_date = week_start_date + pd.Timedelta(days=6)
+    weekly_trades = trades_df[
+        (trades_df['date'] >= week_start_date) & 
+        (trades_df['date'] <= week_end_date)
+    ]
     
-    # Add trade
-    new_trade = {
-        "date": date_str,
-        "symbol": trade_symbol,
-        "type": trade_type,
-        "realized": trade_realized
+    if weekly_trades.empty:
+        return None
+    
+    # Basic statistics
+    total_trades = len(weekly_trades)
+    total_pnl = weekly_trades['realized'].sum()
+    
+    # Calculate portfolio percentage change
+    portfolio_percent_change = (total_pnl / starting_balance) * 100
+    
+    # Win rate calculation
+    profitable_trades = weekly_trades[weekly_trades['realized'] > 0]
+    win_rate = len(profitable_trades) / total_trades * 100 if total_trades > 0 else 0
+    
+    # Average win/loss
+    avg_win = profitable_trades['realized'].mean() if len(profitable_trades) > 0 else 0
+    losing_trades = weekly_trades[weekly_trades['realized'] <= 0]
+    avg_loss = losing_trades['realized'].mean() if len(losing_trades) > 0 else 0
+    
+    # Largest win/loss
+    largest_win = profitable_trades['realized'].max() if len(profitable_trades) > 0 else 0
+    largest_loss = losing_trades['realized'].min() if len(losing_trades) > 0 else 0
+    
+    # Day of week performance
+    weekly_trades['day_of_week'] = weekly_trades['date'].dt.day_name()
+    day_performance = weekly_trades.groupby('day_of_week')['realized'].agg(['sum', 'count'])
+    day_performance['avg_pnl'] = day_performance['sum'] / day_performance['count']
+    best_day = day_performance['avg_pnl'].idxmax() if not day_performance.empty else "N/A"
+    
+    # Symbol performance
+    symbol_performance = weekly_trades.groupby('symbol')['realized'].agg(['sum', 'count'])
+    symbol_performance['avg_pnl'] = symbol_performance['sum'] / symbol_performance['count']
+    best_symbol = symbol_performance['sum'].idxmax() if not symbol_performance.empty else "N/A"
+    
+    results = {
+        'Total Trades': total_trades,
+        'Total P&L': total_pnl,
+        'Portfolio Change': portfolio_percent_change,
+        'Win Rate': win_rate,
+        'Average Win': avg_win,
+        'Average Loss': avg_loss,
+        'Largest Win': largest_win,
+        'Largest Loss': largest_loss,
+        'Best Day': best_day,
+        'Best Symbol': best_symbol,
+        'Day Performance': day_performance,
+        'Symbol Performance': symbol_performance
     }
-    data['trades'].append(new_trade)
     
-    # Add locate if cost > 0
-    if locate_cost > 0:
-        new_locate = {
-            "date": date_str,
-            "symbol": trade_symbol,
-            "totalCost": locate_cost
+    return results
+
+def create_modern_calendar_view(trades_df, year, month):
+    # Filter trades for the specified year and month
+    monthly_trades = trades_df[
+        (trades_df['date'].dt.year == year) & 
+        (trades_df['date'].dt.month == month)
+    ]
+    
+    # Create daily P&L dictionary
+    daily_pnl = monthly_trades.groupby('date')['realized'].agg(['sum', 'count']).to_dict('index')
+    
+    # Create calendar data
+    start_date = pd.Timestamp(f'{year}-{month}-01')
+    end_date = start_date + pd.offsets.MonthEnd(1)
+    dates = pd.date_range(start_date, end_date)
+    
+    calendar_data = []
+    week = []
+    
+    # Add empty cells for days before the 1st of the month
+    first_day_weekday = dates[0].weekday()
+    for _ in range(first_day_weekday):
+        week.append(None)
+    
+    # Fill in the calendar
+    for date in dates:
+        stats = daily_pnl.get(date, {'sum': 0, 'count': 0})
+        week.append({
+            'date': date,
+            'day': date.day,
+            'pnl': stats['sum'],
+            'trades': stats['count']
+        })
+        
+        if len(week) == 7:
+            calendar_data.append(week)
+            week = []
+    
+    # Add empty cells for remaining days
+    if week:
+        while len(week) < 7:
+            week.append(None)
+        calendar_data.append(week)
+    
+    return calendar_data
+
+def render_modern_calendar(calendar_data):
+    days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    
+    # CSS for modern calendar with dark theme
+    st.markdown("""
+        <style>
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            background-color: #1e1e1e;
         }
-        data['locates'].append(new_locate)
+        .calendar-cell {
+            aspect-ratio: 1;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+        }
+        .calendar-cell:hover {
+            transform: scale(1.05);
+            background-color: #383838;
+        }
+        .trades-badge {
+            background-color: #383838;
+            border-radius: 12px;
+            padding: 2px 6px;
+            font-size: 0.8em;
+            color: #b0b0b0;
+        }
+        .empty-cell {
+            background-color: #262626;
+            border-radius: 8px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
     
-    save_data(data)
-    st.sidebar.success("Trade data added successfully!")
+    # Display day headers with dark theme styling
+    cols = st.columns(7)
+    for i, day in enumerate(days):
+        cols[i].markdown(
+            f"<div style='text-align: center; font-weight: 500; color: #b0b0b0;'>{day}</div>",
+            unsafe_allow_html=True
+        )
+    
+    # Display calendar grid
+    max_pnl = max([abs(day['pnl']) for week in calendar_data for day in week if day is not None], default=1)
+    
+    for week in calendar_data:
+        cols = st.columns(7)
+        for i, day in enumerate(week):
+            if day is None:
+                cols[i].markdown(
+                    "<div class='empty-cell' style='aspect-ratio: 1;'></div>",
+                    unsafe_allow_html=True
+                )
+            else:
+                pnl = day['pnl']
+                trades = day['trades']
+                intensity = min(abs(pnl) / max_pnl * 0.5, 0.5)
+                
+                # Using more muted colors for dark theme
+                bg_color = f"rgba(0,255,157,{intensity})" if pnl > 0 else f"rgba(255,77,77,{intensity})" if pnl < 0 else "#2d2d2d"
+                text_color = '#e0e0e0'
+                
+                cols[i].markdown(
+                    f"""
+                    <div class='calendar-cell' style='background-color: {bg_color};'>
+                        <div style='font-size: 1.1em; font-weight: 500; color: {text_color};'>{day['day']}</div>
+                        <div style='color: {'#00ff9d' if pnl > 0 else '#ff4d4d' if pnl < 0 else '#b0b0b0'}; 
+                                  font-weight: 500;'>${pnl:,.2f}</div>
+                        <div class='trades-badge'>{trades} trades</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
 
-# Main dashboard
-st.title("Trading Dashboard")
+def render_weekly_details(trades_df, week_start_date, starting_balance):
+    stats = calculate_weekly_detailed_stats(trades_df, week_start_date, starting_balance)
+    
+    if stats:
+        # Main metrics in modern cards with dark theme
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            pnl_color = '#00ff9d' if stats['Total P&L'] > 0 else '#ff4d4d'
+            pnl_formatted = "${:,.2f}".format(stats['Total P&L'])
+            
+            st.markdown(f"""
+                <div style='background-color: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'>
+                    <h3 style='color: #e0e0e0;'>Performance</h3>
+                    <div style='font-size: 1.8em; font-weight: bold; color: {pnl_color};'>{pnl_formatted}</div>
+                    <div style='color: #b0b0b0;'>Total P&L</div>
+                </div>
+            """, unsafe_allow_html=True)
+            
+        with col2:
+            win_rate_formatted = "{:.1f}%".format(stats['Win Rate'])
+            st.markdown(f"""
+                <div style='background-color: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'>
+                    <h3 style='color: #e0e0e0;'>Win Rate</h3>
+                    <div style='font-size: 1.8em; font-weight: bold; color: #e0e0e0;'>{win_rate_formatted}</div>
+                    <div style='color: #b0b0b0;'>{stats['Total Trades']} Total Trades</div>
+                </div>
+            """, unsafe_allow_html=True)
+            
+        with col3:
+            portfolio_change_formatted = "{:+.2f}%".format(stats['Portfolio Change'])
+            change_color = '#00ff9d' if stats['Portfolio Change'] > 0 else '#ff4d4d'
+            st.markdown(f"""
+                <div style='background-color: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'>
+                    <h3 style='color: #e0e0e0;'>Portfolio Change</h3>
+                    <div style='font-size: 1.8em; font-weight: bold; color: {change_color};'>{portfolio_change_formatted}</div>
+                    <div style='color: #b0b0b0;'>Weekly Return</div>
+                </div>
+            """, unsafe_allow_html=True)
+        
+        # Additional statistics
+        st.markdown("<h3 style='color: #e0e0e0;'>Trade Statistics</h3>", unsafe_allow_html=True)
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown(f"""
+                <div style='background-color: #1e1e1e; padding: 15px; border-radius: 10px; margin: 10px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'>
+                    <div style='color: #00ff9d; font-weight: bold;'>Average Win: ${stats['Average Win']:,.2f}</div>
+                    <div style='color: #ff4d4d; font-weight: bold;'>Average Loss: ${stats['Average Loss']:,.2f}</div>
+                </div>
+            """, unsafe_allow_html=True)
+            
+        with col2:
+            st.markdown(f"""
+                <div style='background-color: #1e1e1e; padding: 15px; border-radius: 10px; margin: 10px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'>
+                    <div style='color: #00ff9d; font-weight: bold;'>Largest Win: ${stats['Largest Win']:,.2f}</div>
+                    <div style='color: #ff4d4d; font-weight: bold;'>Largest Loss: ${stats['Largest Loss']:,.2f}</div>
+                </div>
+            """, unsafe_allow_html=True)
+        
+        # Day performance analysis
+        st.markdown("<h3 style='color: #e0e0e0;'>Daily Performance</h3>", unsafe_allow_html=True)
+        day_perf = stats['Day Performance']
+        
+        # Create bar chart for daily performance with dark theme
+        fig = go.Figure()
+        fig.add_trace(go.Bar(
+            x=day_perf.index,
+            y=day_perf['sum'],
+            marker_color=['#00ff9d' if x > 0 else '#ff4d4d' for x in day_perf['sum']],
+            name='Daily P&L'
+        ))
+        
+        fig.update_layout(
+            title='P&L by Day of Week',
+            xaxis_title='Day of Week',
+            yaxis_title='P&L ($)',
+            height=300,
+            margin=dict(l=20, r=20, t=40, b=20),
+            paper_bgcolor='#1e1e1e',
+            plot_bgcolor='#1e1e1e',
+            font=dict(color='#e0e0e0'),
+            xaxis=dict(
+                gridcolor='#333333',
+                zerolinecolor='#333333'
+            ),
+            yaxis=dict(
+                gridcolor='#333333',
+                zerolinecolor='#333333'
+            )
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Best performing metrics
+        st.markdown(f"""
+            <div style='background-color: #1e1e1e; padding: 15px; border-radius: 10px; margin: 10px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'>
+                <div style='color: #e0e0e0; font-weight: bold;'>🏆 Best Trading Day: {stats['Best Day']}</div>
+                <div style='color: #e0e0e0; font-weight: bold;'>💫 Best Symbol: {stats['Best Symbol']}</div>
+            </div>
+        """, unsafe_allow_html=True)
 
-# Calculate summary statistics
-starting_balance = data.get('starting_balance', 50000)
-total_realized = sum(trade['realized'] for trade in data['trades'])
-total_locate_cost = sum(locate['totalCost'] for locate in data['locates'])
-net_pnl = total_realized - total_locate_cost
-ending_balance = starting_balance + net_pnl
-return_percent = (net_pnl / starting_balance) * 100 if starting_balance else 0
-
-# Calculate latest daily P&L with percentage
-latest_daily_pnl, daily_return_percent, latest_date = calculate_latest_daily_pnl(data['trades'], starting_balance)
-
-# Summary metrics
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    st.metric("Starting Balance", f"${starting_balance:,.2f}")
-with col2:
-    st.metric("Net P&L", f"${net_pnl:,.2f}", f"{return_percent:.2f}%")
-with col3:
-    st.metric("Ending Balance", f"${ending_balance:,.2f}")
-with col4:
-    if latest_date != "No trades":
-        st.metric(f"Daily P&L ({latest_date})", f"${latest_daily_pnl:,.2f}", f"{daily_return_percent:.2f}%")
-    else:
-        st.metric("Daily P&L", "No trades")
-
-# Trades table
-st.subheader("Trades Summary")
-if data['trades']:
-    trades_df = pd.DataFrame(data['trades'])
-    trades_df = trades_df.sort_values('date', ascending=False)
-    st.dataframe(trades_df[['date', 'symbol', 'type', 'realized']], use_container_width=True)
-else:
-    st.info("No trades recorded yet")
-
-# Locates table
-st.subheader("Locates Summary")
-if data['locates']:
-    locates_df = pd.DataFrame(data['locates'])
-    locates_df = locates_df.sort_values('date', ascending=False)
-    st.dataframe(locates_df[['date', 'symbol', 'totalCost']], use_container_width=True)
-else:
-    st.info("No locates recorded yet")
-
-# P&L Chart
-if data['trades']:
-    trades_df = pd.DataFrame(data['trades'])
+# Function to calculate monthly statistics
+def calculate_monthly_stats(trades_df):
+    # Ensure date column is datetime
     trades_df['date'] = pd.to_datetime(trades_df['date'])
-    daily_pnl = trades_df.groupby('date')['realized'].sum().cumsum()
     
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=daily_pnl.index,
-        y=daily_pnl.values,
-        mode='lines+markers',
-        name='Cumulative P&L'
-    ))
+    # Group by month and calculate monthly statistics
+    monthly_stats = trades_df.groupby(pd.Grouper(key='date', freq='M')).agg({
+        'realized': 'sum',
+        'symbol': 'count'  # Number of trades
+    }).reset_index()
     
-    fig.update_layout(
-        title='Cumulative P&L Over Time',
-        xaxis_title='Date',
-        yaxis_title='Cumulative P&L ($)',
-        height=400
+    # Rename columns for clarity
+    monthly_stats.columns = ['Month', 'Monthly P&L', 'Number of Trades']
+    
+    # Calculate cumulative P&L
+    monthly_stats['Cumulative P&L'] = monthly_stats['Monthly P&L'].cumsum()
+    
+    # Calculate monthly win/loss ratio
+    monthly_stats['Win/Loss Ratio'] = monthly_stats.apply(
+        lambda row: 'Positive' if row['Monthly P&L'] > 0 else 'Negative', 
+        axis=1
     )
     
-    st.plotly_chart(fig, use_container_width=True)
+    return monthly_stats
 
-# Add daily summary
-st.subheader("Daily Summary")
-if data['trades']:
-    trades_df = pd.DataFrame(data['trades'])
+def calculate_advanced_monthly_stats(trades_df, month_year, starting_balance):
+    # Filter trades for the specific month
+    monthly_trades = trades_df[
+        (trades_df['date'].dt.year == month_year.year) & 
+        (trades_df['date'].dt.month == month_year.month)
+    ]
+    
+    if monthly_trades.empty:
+        return None
+    
+    # Basic statistics
+    total_trades = len(monthly_trades)
+    total_pnl = monthly_trades['realized'].sum()
+    
+    # Calculate portfolio percentage change
+    portfolio_percent_change = (total_pnl / starting_balance) * 100
+    
+    # Win rate calculation
+    profitable_trades = monthly_trades[monthly_trades['realized'] > 0]
+    win_rate = len(profitable_trades) / total_trades * 100
+    
+    # Average win/loss
+    avg_win = profitable_trades['realized'].mean() if len(profitable_trades) > 0 else 0
+    losing_trades = monthly_trades[monthly_trades['realized'] <= 0]
+    avg_loss = losing_trades['realized'].mean() if len(losing_trades) > 0 else 0
+    
+    # Day of week performance
+    monthly_trades['day_of_week'] = monthly_trades['date'].dt.day_name()
+    day_performance = monthly_trades.groupby('day_of_week')['realized'].agg(['sum', 'count'])
+    day_performance['avg_pnl'] = day_performance['sum'] / day_performance['count']
+    best_day = day_performance['avg_pnl'].idxmax()
+    
+    # Detailed results
+    results = {
+        'Total Trades': total_trades,
+        'Total P&L': total_pnl,
+        'Portfolio Change': portfolio_percent_change,
+        'Win Rate': win_rate,
+        'Average Win': avg_win,
+        'Average Loss': avg_loss,
+        'Best Day': best_day,
+        'Day Performance': day_performance
+    }
+    
+    return results
+
+# Function to calculate latest daily P&L
+def calculate_latest_daily_pnl(trades, starting_balance):
+    if not trades:
+        return 0, 0, "No trades"
+    
+    trades_df = pd.DataFrame(trades)
     trades_df['date'] = pd.to_datetime(trades_df['date'])
-    daily_summary = trades_df.groupby('date')['realized'].sum()
+    latest_date = trades_df['date'].max()
+    latest_pnl = trades_df[trades_df['date'] == latest_date]['realized'].sum()
     
-    st.dataframe(daily_summary.sort_index(ascending=False), use_container_width=True)
+    # Calculate daily percentage return based on starting balance
+    daily_return_percent = (latest_pnl / starting_balance) * 100
+    
+    return latest_pnl, daily_return_percent, latest_date.strftime("%Y-%m-%d")
 
-# Add PDF export button
-if data['trades'] or data['locates']:
-    st.subheader("Export Report")
+def calculate_weekly_stats(trades_df):
+    # Ensure date column is datetime
+    trades_df['date'] = pd.to_datetime(trades_df['date'])
     
-    if st.button("Generate PDF Report"):
-        try:
-            pdf_bytes = create_dashboard_pdf(data)
+    # Group by week and calculate weekly statistics
+    weekly_stats = trades_df.groupby(pd.Grouper(key='date', freq='W-MON')).agg({
+        'realized': 'sum',
+        'symbol': 'count'  # Number of trades
+    }).reset_index()
+    
+    # Rename columns for clarity
+    weekly_stats.columns = ['Week', 'Weekly P&L', 'Number of Trades']
+    
+    # Calculate cumulative P&L
+    weekly_stats['Cumulative P&L'] = weekly_stats['Weekly P&L'].cumsum()
+    
+    # Calculate weekly win/loss ratio
+    weekly_stats['Win/Loss Ratio'] = weekly_stats.apply(
+        lambda row: 'Positive' if row['Weekly P&L'] > 0 else 'Negative', 
+        axis=1
+    )
+    
+    return weekly_stats
+
+def create_calendar_view(trades_df, year, month):
+    # Filter trades for the specified year and month
+    monthly_trades = trades_df[
+        (trades_df['date'].dt.year == year) & 
+        (trades_df['date'].dt.month == month)
+    ]
+    
+    # Create a calendar DataFrame
+    start_date = pd.Timestamp(f'{year}-{month}-01')
+    end_date = start_date + pd.offsets.MonthEnd(1)
+    dates = pd.date_range(start_date, end_date)
+    
+    # Create daily P&L dictionary
+    daily_pnl = monthly_trades.groupby('date')['realized'].sum().to_dict()
+    
+    # Create calendar data
+    calendar_data = []
+    week = []
+    
+    # Add empty cells for days before the 1st of the month
+    first_day_weekday = dates[0].weekday()
+    for _ in range(first_day_weekday):
+        week.append(None)
+    
+    # Fill in the calendar
+    for date in dates:
+        pnl = daily_pnl.get(date, 0)
+        week.append({'date': date.day, 'pnl': pnl})
+        
+        if len(week) == 7:
+            calendar_data.append(week)
+            week = []
+    
+    # Add empty cells for remaining days
+    if week:
+        while len(week) < 7:
+            week.append(None)
+        calendar_data.append(week)
+    
+    return calendar_data
+
+def main():
+    # Load existing data
+    data = load_data()
+
+    # Sidebar for adding new entries
+    st.sidebar.title("Add New Trade")
+
+    # Combined trade and locate input
+    mexico_tz = pytz.timezone('America/Mexico_City')
+    mexico_now = datetime.now(pytz.UTC).astimezone(mexico_tz)
+    trade_date = st.sidebar.date_input("Date", mexico_now)
+    trade_symbol = st.sidebar.text_input("Symbol")
+    trade_type = st.sidebar.selectbox("Type", ["Long", "Short"])
+    trade_realized = st.sidebar.number_input("Realized P&L")
+    locate_cost = st.sidebar.number_input("Locate Cost", min_value=0.0)
+
+    if st.sidebar.button("Add Trade"):
+        # Format date as string
+        date_str = trade_date.strftime("%Y-%m-%d")
+        
+        # Add trade
+        new_trade = {
+            "date": date_str,
+            "symbol": trade_symbol,
+            "type": trade_type,
+            "realized": trade_realized
+        }
+        data['trades'].append(new_trade)
+        
+        # Add locate if cost > 0
+        if locate_cost > 0:
+            new_locate = {
+                "date": date_str,
+                "symbol": trade_symbol,
+                "totalCost": locate_cost
+            }
+            data['locates'].append(new_locate)
+        
+        save_data(data)
+        st.sidebar.success("Trade data added successfully!")
+
+    # Create tabs
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+        "Dashboard", "Trades", "Monthly Performance", 
+        "Monthly Drill Down", "Weekly Performance", "Calendar View"
+    ])
+
+    with tab1:
+        # Main dashboard
+        st.title("Trading Dashboard")
+
+        # Calculate summary statistics
+        starting_balance = data.get('starting_balance', 50000)
+        total_realized = sum(trade['realized'] for trade in data['trades'])
+        total_locate_cost = sum(locate['totalCost'] for locate in data['locates'])
+        net_pnl = total_realized - total_locate_cost
+        ending_balance = starting_balance + net_pnl
+        return_percent = (net_pnl / starting_balance) * 100 if starting_balance else 0
+
+        # Calculate latest daily P&L with percentage
+        latest_daily_pnl, daily_return_percent, latest_date = calculate_latest_daily_pnl(data['trades'], starting_balance)
+
+        # Summary metrics
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Starting Balance", f"${starting_balance:,.2f}")
+        with col2:
+            st.metric("Net P&L", f"${net_pnl:,.2f}", f"{return_percent:.2f}%")
+        with col3:
+            st.metric("Ending Balance", f"${ending_balance:,.2f}")
+        with col4:
+            if latest_date != "No trades":
+                st.metric(f"Daily P&L ({latest_date})", f"${latest_daily_pnl:,.2f}", f"{daily_return_percent:.2f}%")
+            else:
+                st.metric("Daily P&L", "No trades")
+
+        # P&L Chart
+        if data['trades']:
+            trades_df = pd.DataFrame(data['trades'])
+            trades_df['date'] = pd.to_datetime(trades_df['date'])
+            daily_pnl = trades_df.groupby('date')['realized'].sum().cumsum()
             
-            # Create download button
-            pdf_filename = f"trading_dashboard_{datetime.now().strftime('%Y%m%d')}.pdf"
-            st.download_button(
-                label="Download PDF Report",
-                data=pdf_bytes,
-                file_name=pdf_filename,
-                mime="application/pdf"
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=daily_pnl.index,
+                y=daily_pnl.values,
+                mode='lines+markers',
+                name='Cumulative P&L'
+            ))
+            
+            fig.update_layout(
+                title='Cumulative P&L Over Time',
+                xaxis_title='Date',
+                yaxis_title='Cumulative P&L ($)',
+                height=400
             )
-            st.success("PDF report generated successfully!")
-        except Exception as e:
-            st.error(f"Error generating PDF: {str(e)}")
+            
+            st.plotly_chart(fig, use_container_width=True)
 
-if __name__ == "__main__":
+    with tab2:
+        # Trades table and details
+        st.subheader("Trades Summary")
+        if data['trades']:
+            trades_df = pd.DataFrame(data['trades'])
+            trades_df = trades_df.sort_values('date', ascending=False)
+            st.dataframe(trades_df[['date', 'symbol', 'type', 'realized']], use_container_width=True)
+        else:
+            st.info("No trades recorded yet")
+
+        # Locates table
+        st.subheader("Locates Summary")
+        if data['locates']:
+            locates_df = pd.DataFrame(data['locates'])
+            locates_df = locates_df.sort_values('date', ascending=False)
+            st.dataframe(locates_df[['date', 'symbol', 'totalCost']], use_container_width=True)
+        else:
+            st.info("No locates recorded yet")
+
+    with tab3:
+        # Monthly Performance Tab
+        if data['trades']:
+            trades_df = pd.DataFrame(data['trades'])
+            trades_df['date'] = pd.to_datetime(trades_df['date'])
+            
+            # Calculate monthly statistics
+            monthly_stats = calculate_monthly_stats(trades_df)
+            
+            # Display monthly statistics table
+            st.subheader("Monthly Performance Summary")
+            st.dataframe(monthly_stats, use_container_width=True)
+            
+            # Monthly P&L Bar Chart
+            st.subheader("Monthly P&L Breakdown")
+            fig_monthly = go.Figure(data=[
+                go.Bar(
+                    x=monthly_stats['Month'].dt.strftime('%Y-%m'),
+                    y=monthly_stats['Monthly P&L'],
+                    marker_color=monthly_stats['Monthly P&L'].apply(lambda x: 'green' if x > 0 else 'red')
+                )
+            ])
+            fig_monthly.update_layout(
+                title='Monthly P&L',
+                xaxis_title='Month',
+                yaxis_title='P&L ($)',
+                height=400
+            )
+            st.plotly_chart(fig_monthly, use_container_width=True)
+            
+            # Cumulative P&L Line Chart
+            st.subheader("Cumulative P&L Over Time")
+            fig_cumulative = go.Figure(data=[
+                go.Scatter(
+                    x=monthly_stats['Month'].dt.strftime('%Y-%m'),
+                    y=monthly_stats['Cumulative P&L'],
+                    mode='lines+markers'
+                )
+            ])
+            fig_cumulative.update_layout(
+                title='Cumulative Monthly P&L',
+                xaxis_title='Month',
+                yaxis_title='Cumulative P&L ($)',
+                height=400
+            )
+            st.plotly_chart(fig_cumulative, use_container_width=True)
+        else:
+            st.info("No trades recorded yet to generate monthly performance")
+
+    with tab4:
+        if data['trades']:
+            trades_df = pd.DataFrame(data['trades'])
+            trades_df['date'] = pd.to_datetime(trades_df['date'])
+            
+            unique_months = trades_df['date'].dt.to_period('M').unique()
+            
+            selected_month = st.selectbox(
+                "Select Month", 
+                sorted(unique_months, reverse=True), 
+                format_func=lambda x: x.strftime("%B %Y")
+            )
+            
+            # Pass starting_balance to the function
+            monthly_stats = calculate_advanced_monthly_stats(trades_df, selected_month.to_timestamp(), data.get('starting_balance', 50000))
+            
+            if monthly_stats:
+                st.subheader(f"Monthly Statistics for {selected_month.strftime('%B %Y')}")
+                
+                # Main metrics
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Total Trades", monthly_stats['Total Trades'])
+                    st.metric("Total P&L", f"${monthly_stats['Total P&L']:,.2f}")
+                
+                with col2:
+                    st.metric("Win Rate", f"{monthly_stats['Win Rate']:.2f}%")
+                    st.metric("Average Win", f"${monthly_stats['Average Win']:,.2f}")
+                
+                with col3:
+                    st.metric("Portfolio Change", f"{monthly_stats['Portfolio Change']:.2f}%")
+                    st.metric("Average Loss", f"${monthly_stats['Average Loss']:,.2f}")
+                
+                # Day of Week Performance
+                st.subheader("Day of Week Performance")
+                day_perf_df = monthly_stats['Day Performance'].reset_index()
+                day_perf_df.columns = ['Day', 'Total P&L', 'Trade Count', 'Avg P&L']
+                st.dataframe(day_perf_df, use_container_width=True)
+                
+                # Bar chart of day performance
+                fig_day_perf = go.Figure(data=[
+                    go.Bar(
+                        x=day_perf_df['Day'],
+                        y=day_perf_df['Avg P&L'],
+                        marker_color=day_perf_df['Avg P&L'].apply(lambda x: 'green' if x > 0 else 'red')
+                    )
+                ])
+                fig_day_perf.update_layout(
+                    title='Average P&L by Day of Week',
+                    xaxis_title='Day of Week',
+                    yaxis_title='Average P&L ($)',
+                    height=400
+                )
+                st.plotly_chart(fig_day_perf, use_container_width=True)
+                
+                # Highlight best day
+                st.info(f"Best Performing Day: {monthly_stats['Best Day']}")
+            
+            else:
+                st.warning("No trades for the selected month")
+        
+        else:
+            st.info("No trades recorded yet to generate monthly drill-down")
+
+    with tab5:
+        if data['trades']:
+            trades_df = pd.DataFrame(data['trades'])
+            trades_df['date'] = pd.to_datetime(trades_df['date'])
+            
+            # Get available weeks
+            weekly_stats = calculate_weekly_stats(trades_df)
+            selected_week = st.selectbox(
+                "Select Week",
+                weekly_stats['Week'].dt.strftime('%Y-%m-%d'),
+                format_func=lambda x: f"Week of {x}"
+            )
+            
+            selected_week_date = pd.to_datetime(selected_week)
+            render_weekly_details(trades_df, selected_week_date, data.get('starting_balance', 50000))
+        else:
+            st.info("No trades recorded yet to generate weekly performance")
+    
+    with tab6:
+        if data['trades']:
+            trades_df = pd.DataFrame(data['trades'])
+            trades_df['date'] = pd.to_datetime(trades_df['date'])
+            
+            # Date selection with modern styling
+            col1, col2 = st.columns(2)
+            with col1:
+                selected_year = st.selectbox(
+                    "Select Year",
+                    sorted(trades_df['date'].dt.year.unique(), reverse=True)
+                )
+            with col2:
+                selected_month = st.selectbox(
+                    "Select Month",
+                    range(1, 13),
+                    format_func=lambda x: datetime(2000, x, 1).strftime('%B')
+                )
+            
+            calendar_data = create_modern_calendar_view(trades_df, selected_year, selected_month)
+            render_modern_calendar(calendar_data)
+        else:
+            st.info("No trades recorded yet to generate calendar view")
+
+    # Sidebar footer
     st.sidebar.markdown("---")
     st.sidebar.write("Trading Dashboard v1.0")
-    st.sidebar.write("© 2024 All rights reserved")
+    st.sidebar.write("© 2025 All rights reserved")
+
+# Run the main function
+if __name__ == "__main__":
+    main()
