@@ -144,49 +144,82 @@ def create_modern_calendar_view(trades_df, year, month):
 def render_modern_calendar(calendar_data):
     days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     
-    # CSS for modern calendar with dark theme
+    # CSS for modern calendar with mobile-friendly adjustments
     st.markdown("""
         <style>
+        .calendar-wrapper {
+            width: 100%;
+            overflow-x: hidden;
+        }
         .calendar-header {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 5px 0;
             background-color: #1e1e1e;
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
         }
         .calendar-cell {
-            aspect-ratio: 1;
-            padding: 10px;
-            border-radius: 8px;
+            min-height: clamp(60px, 15vw, 100px);
+            padding: clamp(4px, 1vw, 10px);
+            border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            transition: transform 0.2s;
             background-color: #2d2d2d;
             color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 2px;
         }
         .calendar-cell:hover {
-            transform: scale(1.05);
+            transform: none;
             background-color: #383838;
+        }
+        .cell-day {
+            font-size: clamp(0.8rem, 3vw, 1.1rem);
+            font-weight: 500;
+        }
+        .cell-pnl {
+            font-size: clamp(0.7rem, 2.5vw, 1rem);
+            font-weight: 500;
         }
         .trades-badge {
             background-color: #383838;
             border-radius: 12px;
-            padding: 2px 6px;
-            font-size: 0.8em;
+            padding: 2px 4px;
+            font-size: clamp(0.6rem, 2vw, 0.8rem);
             color: #b0b0b0;
+            white-space: nowrap;
         }
         .empty-cell {
             background-color: #262626;
-            border-radius: 8px;
+            border-radius: 6px;
+            min-height: clamp(60px, 15vw, 100px);
+        }
+        .day-header {
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            text-align: center;
+            font-weight: 500;
+            color: #b0b0b0;
+            padding: 2px;
+        }
+        @media (max-width: 768px) {
+            .calendar-cell {
+                padding: 4px;
+            }
+            .trades-badge {
+                padding: 1px 3px;
+            }
         }
         </style>
     """, unsafe_allow_html=True)
     
-    # Display day headers with dark theme styling
+    # Create a wrapper div for the calendar
+    st.markdown('<div class="calendar-wrapper">', unsafe_allow_html=True)
+    
+    # Display day headers
     cols = st.columns(7)
     for i, day in enumerate(days):
-        cols[i].markdown(
-            f"<div style='text-align: center; font-weight: 500; color: #b0b0b0;'>{day}</div>",
-            unsafe_allow_html=True
-        )
+        cols[i].markdown(f'<div class="day-header">{day}</div>', unsafe_allow_html=True)
     
     # Display calendar grid
     max_pnl = max([abs(day['pnl']) for week in calendar_data for day in week if day is not None], default=1)
@@ -196,7 +229,7 @@ def render_modern_calendar(calendar_data):
         for i, day in enumerate(week):
             if day is None:
                 cols[i].markdown(
-                    "<div class='empty-cell' style='aspect-ratio: 1;'></div>",
+                    '<div class="empty-cell"></div>',
                     unsafe_allow_html=True
                 )
             else:
@@ -204,21 +237,22 @@ def render_modern_calendar(calendar_data):
                 trades = day['trades']
                 intensity = min(abs(pnl) / max_pnl * 0.5, 0.5)
                 
-                # Using more muted colors for dark theme
                 bg_color = f"rgba(0,255,157,{intensity})" if pnl > 0 else f"rgba(255,77,77,{intensity})" if pnl < 0 else "#2d2d2d"
-                text_color = '#e0e0e0'
+                pnl_color = '#00ff9d' if pnl > 0 else '#ff4d4d' if pnl < 0 else '#b0b0b0'
                 
                 cols[i].markdown(
                     f"""
                     <div class='calendar-cell' style='background-color: {bg_color};'>
-                        <div style='font-size: 1.1em; font-weight: 500; color: {text_color};'>{day['day']}</div>
-                        <div style='color: {'#00ff9d' if pnl > 0 else '#ff4d4d' if pnl < 0 else '#b0b0b0'}; 
-                                  font-weight: 500;'>${pnl:,.2f}</div>
-                        <div class='trades-badge'>{trades} trades</div>
+                        <div class='cell-day'>{day['day']}</div>
+                        <div class='cell-pnl' style='color: {pnl_color};'>${pnl:,.0f}</div>
+                        <div class='trades-badge'>{trades}t</div>
                     </div>
                     """,
                     unsafe_allow_html=True
                 )
+    
+    # Close the wrapper div
+    st.markdown('</div>', unsafe_allow_html=True)
 
 def render_weekly_details(trades_df, week_start_date, starting_balance):
     stats = calculate_weekly_detailed_stats(trades_df, week_start_date, starting_balance)
