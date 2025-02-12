@@ -752,5 +752,5 @@ def main():
     st.sidebar.write("© 2025 All rights reserved")
 
 # Run the main function
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
