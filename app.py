@@ -727,22 +727,22 @@ def main():
 
     with tab3:
         if data['trades']:
-    trades_df = pd.DataFrame(data['trades'])
-    trades_df['date'] = pd.to_datetime(trades_df['date'])
-    
-    # Get available months
-    unique_months = trades_df['date'].dt.to_period('M').unique()
-    selected_month = st.selectbox(
-        "Select Month", 
-        sorted(unique_months, reverse=True), 
-        format_func=lambda x: x.strftime("%B %Y")
-    )
-    
-    # Pass starting_balance to the function
-    selected_month_date = selected_month.to_timestamp()
-    render_monthly_details(trades_df, selected_month_date, data.get('starting_balance', 50000))
-else:
-    st.info("No trades recorded yet to generate monthly performance")
+            trades_df = pd.DataFrame(data['trades'])
+            trades_df['date'] = pd.to_datetime(trades_df['date'])
+            
+            # Get available months
+            unique_months = trades_df['date'].dt.to_period('M').unique()
+            selected_month = st.selectbox(
+                "Select Month", 
+                sorted(unique_months, reverse=True), 
+                format_func=lambda x: x.strftime("%B %Y")
+            )
+            
+            # Pass starting_balance to the function
+            selected_month_date = selected_month.to_timestamp()
+            render_monthly_details(trades_df, selected_month_date, data.get('starting_balance', 50000))
+        else:
+            st.info("No trades recorded yet to generate monthly performance")
             
             # Cumulative P&L Line Chart
             st.subheader("Cumulative P&L Over Time")
