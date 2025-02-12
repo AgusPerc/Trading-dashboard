@@ -144,115 +144,153 @@ def create_modern_calendar_view(trades_df, year, month):
 def render_modern_calendar(calendar_data):
     days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     
-    # CSS for modern calendar with mobile-friendly adjustments
     st.markdown("""
         <style>
-        .calendar-wrapper {
-            width: 100%;
-            overflow-x: hidden;
+        .calendar-container {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 8px;
+            margin-bottom: 16px;
         }
+        
         .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            background-color: #1e1e1e;
-            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
+            padding: 4px;
         }
+        
+        .day-label {
+            color: #808080;
+            font-size: 0.75rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        
         .calendar-cell {
-            min-height: clamp(60px, 15vw, 100px);
-            padding: clamp(4px, 1vw, 10px);
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            background-color: #2d2d2d;
-            color: #e0e0e0;
+            position: relative;
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding-top: 100%; /* Creates a square aspect ratio */
+        }
+        
+        .cell-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 4px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 2px;
         }
-        .calendar-cell:hover {
-            transform: none;
-            background-color: #383838;
+        
+        .date-number {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #e0e0e0;
         }
-        .cell-day {
-            font-size: clamp(0.8rem, 3vw, 1.1rem);
+        
+        .pnl-amount {
+            font-size: 0.75rem;
             font-weight: 500;
+            text-align: right;
         }
-        .cell-pnl {
-            font-size: clamp(0.7rem, 2.5vw, 1rem);
-            font-weight: 500;
+        
+        .trade-count {
+            font-size: 0.625rem;
+            color: #808080;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            padding: 1px 4px;
+            display: inline-block;
+            margin-left: auto;
         }
-        .trades-badge {
-            background-color: #383838;
-            border-radius: 12px;
-            padding: 2px 4px;
-            font-size: clamp(0.6rem, 2vw, 0.8rem);
-            color: #b0b0b0;
-            white-space: nowrap;
-        }
+        
         .empty-cell {
-            background-color: #262626;
-            border-radius: 6px;
-            min-height: clamp(60px, 15vw, 100px);
+            background: #262626;
+            border-radius: 8px;
+            padding-top: 100%;
         }
-        .day-header {
-            font-size: clamp(0.7rem, 2vw, 0.9rem);
-            text-align: center;
-            font-weight: 500;
-            color: #b0b0b0;
-            padding: 2px;
+        
+        .positive-cell {
+            background: linear-gradient(135deg, #2d2d2d, rgba(0, 255, 157, 0.15));
+            border: 1px solid rgba(0, 255, 157, 0.2);
         }
-        @media (max-width: 768px) {
-            .calendar-cell {
+        
+        .negative-cell {
+            background: linear-gradient(135deg, #2d2d2d, rgba(255, 77, 77, 0.15));
+            border: 1px solid rgba(255, 77, 77, 0.2);
+        }
+        
+        @media (max-width: 480px) {
+            .calendar-container {
                 padding: 4px;
             }
-            .trades-badge {
-                padding: 1px 3px;
+            .calendar-grid {
+                gap: 2px;
+            }
+            .date-number {
+                font-size: 0.75rem;
+            }
+            .pnl-amount {
+                font-size: 0.625rem;
+            }
+            .trade-count {
+                font-size: 0.5rem;
             }
         }
         </style>
     """, unsafe_allow_html=True)
     
-    # Create a wrapper div for the calendar
-    st.markdown('<div class="calendar-wrapper">', unsafe_allow_html=True)
+    # Start calendar container
+    st.markdown('<div class="calendar-container">', unsafe_allow_html=True)
     
-    # Display day headers
-    cols = st.columns(7)
-    for i, day in enumerate(days):
-        cols[i].markdown(f'<div class="day-header">{day}</div>', unsafe_allow_html=True)
+    # Render day headers
+    st.markdown('<div class="calendar-header">', unsafe_allow_html=True)
+    for day in days:
+        st.markdown(f'<div class="day-label">{day}</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
     
-    # Display calendar grid
+    # Start calendar grid
+    st.markdown('<div class="calendar-grid">', unsafe_allow_html=True)
+    
+    # Calculate max PnL for color intensity
     max_pnl = max([abs(day['pnl']) for week in calendar_data for day in week if day is not None], default=1)
     
+    # Render calendar cells
     for week in calendar_data:
-        cols = st.columns(7)
-        for i, day in enumerate(week):
+        for day in week:
             if day is None:
-                cols[i].markdown(
-                    '<div class="empty-cell"></div>',
-                    unsafe_allow_html=True
-                )
+                st.markdown('<div class="empty-cell"></div>', unsafe_allow_html=True)
             else:
                 pnl = day['pnl']
                 trades = day['trades']
-                intensity = min(abs(pnl) / max_pnl * 0.5, 0.5)
+                cell_class = 'positive-cell' if pnl > 0 else 'negative-cell' if pnl < 0 else ''
+                pnl_color = '#00ff9d' if pnl > 0 else '#ff4d4d' if pnl < 0 else '#808080'
                 
-                bg_color = f"rgba(0,255,157,{intensity})" if pnl > 0 else f"rgba(255,77,77,{intensity})" if pnl < 0 else "#2d2d2d"
-                pnl_color = '#00ff9d' if pnl > 0 else '#ff4d4d' if pnl < 0 else '#b0b0b0'
-                
-                cols[i].markdown(
-                    f"""
-                    <div class='calendar-cell' style='background-color: {bg_color};'>
-                        <div class='cell-day'>{day['day']}</div>
-                        <div class='cell-pnl' style='color: {pnl_color};'>${pnl:,.0f}</div>
-                        <div class='trades-badge'>{trades}t</div>
+                st.markdown(f"""
+                    <div class="calendar-cell {cell_class}">
+                        <div class="cell-content">
+                            <div class="date-number">{day['day']}</div>
+                            <div>
+                                <div class="pnl-amount" style="color: {pnl_color}">${pnl:,.0f}</div>
+                                <div class="trade-count">{trades}t</div>
+                            </div>
+                        </div>
                     </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+                """, unsafe_allow_html=True)
     
-    # Close the wrapper div
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Close calendar grid and container
+    st.markdown('</div></div>', unsafe_allow_html=True)
 
 def render_weekly_details(trades_df, week_start_date, starting_balance):
     stats = calculate_weekly_detailed_stats(trades_df, week_start_date, starting_balance)
