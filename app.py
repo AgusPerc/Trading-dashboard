@@ -142,188 +142,83 @@ def create_modern_calendar_view(trades_df, year, month):
     return calendar_data
 
 def render_modern_calendar(calendar_data):
-    """
-    Renders a calendar with an iOS-like design.
-    Expected calendar_data format: List[List[Optional[Dict]]]
-    where Dict contains 'day': int, 'pnl': float, 'trades': int
-    """
-    if not calendar_data:
-        st.error("No calendar data provided")
-        return
-        
-    days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']  # iOS starts with Sunday
+    days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     
+    # CSS for modern calendar with dark theme
     st.markdown("""
         <style>
-        .ios-calendar-container {
-            background: #ffffff;
-            border-radius: 10px;
-            padding: 16px;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .ios-calendar-header {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            margin-bottom: 10px;
-        }
-        
-        .ios-day-label {
-            color: #8e8e93;
-            font-size: 13px;
-            text-align: center;
-            font-weight: 500;
-            padding: 8px 0;
-        }
-        
-        .ios-calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-        }
-        
-        .ios-calendar-cell {
-            position: relative;
-            aspect-ratio: 1;
-            border-radius: 50%;
+        .calendar-header {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 4px;
+            justify-content: space-between;
+            padding: 10px 0;
+            background-color: #1e1e1e;
         }
-        
-        .ios-date-number {
-            font-size: 16px;
-            font-weight: 400;
-            color: #1c1c1e;
-            margin-bottom: 2px;
+        .calendar-cell {
+            aspect-ratio: 1;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+            background-color: #2d2d2d;
+            color: #e0e0e0;
         }
-        
-        .ios-pnl-amount {
-            font-size: 10px;
-            font-weight: 500;
+        .calendar-cell:hover {
+            transform: scale(1.05);
+            background-color: #383838;
         }
-        
-        .ios-trade-count {
-            font-size: 9px;
-            color: #8e8e93;
-            margin-top: 1px;
+        .trades-badge {
+            background-color: #383838;
+            border-radius: 12px;
+            padding: 2px 6px;
+            font-size: 0.8em;
+            color: #b0b0b0;
         }
-        
-        .ios-empty-cell {
-            background: transparent;
-        }
-        
-        .ios-today-cell {
-            background: #007AFF;
-        }
-        
-        .ios-today-cell .ios-date-number,
-        .ios-today-cell .ios-pnl-amount,
-        .ios-today-cell .ios-trade-count {
-            color: #ffffff !important;
-        }
-        
-        .ios-profit-indicator {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            margin-top: 2px;
-        }
-        
-        .ios-cell-hover:hover {
-            background: rgba(0, 0, 0, 0.05);
-            transition: background 0.2s ease;
-        }
-        
-        @media (max-width: 480px) {
-            .ios-calendar-container {
-                padding: 12px;
-            }
-            .ios-date-number {
-                font-size: 14px;
-            }
-            .ios-pnl-amount {
-                font-size: 9px;
-            }
-            .ios-trade-count {
-                font-size: 8px;
-            }
-        }
-        
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            .ios-calendar-container {
-                background: #1c1c1e;
-            }
-            .ios-date-number {
-                color: #ffffff;
-            }
-            .ios-cell-hover:hover {
-                background: rgba(255, 255, 255, 0.1);
-            }
+        .empty-cell {
+            background-color: #262626;
+            border-radius: 8px;
         }
         </style>
     """, unsafe_allow_html=True)
     
-    try:
-        # Start calendar container
-        st.markdown('<div class="ios-calendar-container">', unsafe_allow_html=True)
-        
-        # Render day headers
-        st.markdown('<div class="ios-calendar-header">', unsafe_allow_html=True)
-        for day in days:
-            st.markdown(f'<div class="ios-day-label">{day}</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Start calendar grid
-        st.markdown('<div class="ios-calendar-grid">', unsafe_allow_html=True)
-        
-        # Get current date for highlighting today
-        from datetime import datetime
-        today = datetime.now().day
-        
-        # Render calendar cells
-        for week in calendar_data:
-            for day in week:
-                if day is None:
-                    st.markdown('<div class="ios-empty-cell"></div>', unsafe_allow_html=True)
-                else:
-                    try:
-                        pnl = day.get('pnl', 0)
-                        trades = day.get('trades', 0)
-                        day_num = day.get('day', '')
-                        
-                        # Determine if this cell is today
-                        is_today = day_num == today
-                        cell_class = 'ios-today-cell' if is_today else 'ios-cell-hover'
-                        
-                        # Set profit/loss indicator color
-                        indicator_color = '#34C759' if pnl > 0 else '#FF3B30' if pnl < 0 else 'transparent'
-                        pnl_color = '#34C759' if pnl > 0 else '#FF3B30' if pnl < 0 else '#8e8e93'
-                        
-                        st.markdown(f"""
-                            <div class="ios-calendar-cell {cell_class}">
-                                <div class="ios-date-number">{day_num}</div>
-                                <div class="ios-pnl-amount" style="color: {pnl_color}">
-                                    ${abs(pnl):,.0f}
-                                </div>
-                                <div class="ios-trade-count">{trades}t</div>
-                                <div class="ios-profit-indicator" style="background-color: {indicator_color}"></div>
-                            </div>
-                        """, unsafe_allow_html=True)
-                    except (KeyError, TypeError) as e:
-                        st.error(f"Invalid day data format: {e}")
-                        continue
-        
-        # Close calendar grid and container
-        st.markdown('</div></div>', unsafe_allow_html=True)
-        
-    except Exception as e:
-        st.error(f"Error rendering calendar: {str(e)}")
+    # Display day headers with dark theme styling
+    cols = st.columns(7)
+    for i, day in enumerate(days):
+        cols[i].markdown(
+            f"<div style='text-align: center; font-weight: 500; color: #b0b0b0;'>{day}</div>",
+            unsafe_allow_html=True
+        )
+    
+    # Display calendar grid
+    max_pnl = max([abs(day['pnl']) for week in calendar_data for day in week if day is not None], default=1)
+    
+    for week in calendar_data:
+        cols = st.columns(7)
+        for i, day in enumerate(week):
+            if day is None:
+                cols[i].markdown(
+                    "<div class='empty-cell' style='aspect-ratio: 1;'></div>",
+                    unsafe_allow_html=True
+                )
+            else:
+                pnl = day['pnl']
+                trades = day['trades']
+                intensity = min(abs(pnl) / max_pnl * 0.5, 0.5)
+                
+                # Using more muted colors for dark theme
+                bg_color = f"rgba(0,255,157,{intensity})" if pnl > 0 else f"rgba(255,77,77,{intensity})" if pnl < 0 else "#2d2d2d"
+                text_color = '#e0e0e0'
+                
+                cols[i].markdown(
+                    f"""
+                    <div class='calendar-cell' style='background-color: {bg_color};'>
+                        <div style='font-size: 1.1em; font-weight: 500; color: {text_color};'>{day['day']}</div>
+                        <div style='color: {'#00ff9d' if pnl > 0 else '#ff4d4d' if pnl < 0 else '#b0b0b0'}; 
+                                  font-weight: 500;'>${pnl:,.2f}</div>
+                        <div class='trades-badge'>{trades} trades</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
 
 def render_weekly_details(trades_df, week_start_date, starting_balance):
     stats = calculate_weekly_detailed_stats(trades_df, week_start_date, starting_balance)
@@ -857,5 +752,5 @@ def main():
     st.sidebar.write("© 2025 All rights reserved")
 
 # Run the main function
-if __name__ == "__main__":
+if _name_ == "_main_":
     main()
