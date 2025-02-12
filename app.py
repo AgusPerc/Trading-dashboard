@@ -189,8 +189,6 @@ def render_modern_calendar(calendar_data):
         )
     
     # Display calendar grid
-    max_pnl = max([abs(day['pnl']) for week in calendar_data for day in week if day is not None], default=1)
-    
     for week in calendar_data:
         cols = st.columns(7)
         for i, day in enumerate(week):
@@ -202,18 +200,17 @@ def render_modern_calendar(calendar_data):
             else:
                 pnl = day['pnl']
                 trades = day['trades']
-                intensity = min(abs(pnl) / max_pnl * 0.5, 0.5)
                 
-                # Using more muted colors for dark theme
-                bg_color = f"rgba(0,255,157,{intensity})" if pnl > 0 else f"rgba(255,77,77,{intensity})" if pnl < 0 else "#2d2d2d"
+                # Using fixed colors instead of intensity-based colors
+                bg_color = "rgba(0,255,157,0.15)" if pnl > 0 else "rgba(255,77,77,0.15)" if pnl < 0 else "#2d2d2d"
                 text_color = '#e0e0e0'
                 
                 cols[i].markdown(
                     f"""
                     <div class='calendar-cell' style='background-color: {bg_color};'>
                         <div style='font-size: 1.1em; font-weight: 500; color: {text_color};'>{day['day']}</div>
-                        <div style='color: {'#00ff9d' if pnl > 0 else '#ff4d4d' if pnl < 0 else '#b0b0b0'}; 
-                                  font-weight: 500;'>${pnl:,.2f}</div>
+                        <div style='color: {'#00ff9d' if pnl > 0 else '#ff4d4d' if pnl < 0 else '#b0b0b0'};
+                                   font-weight: 500;'>${pnl:,.2f}</div>
                         <div class='trades-badge'>{trades} trades</div>
                     </div>
                     """,
