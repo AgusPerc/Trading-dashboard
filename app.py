@@ -141,7 +141,16 @@ def create_modern_calendar_view(trades_df, year, month):
     
     return calendar_data
 
-def render_ios_calendar(calendar_data):
+def render_modern_calendar(calendar_data):
+    """
+    Renders a calendar with an iOS-like design.
+    Expected calendar_data format: List[List[Optional[Dict]]]
+    where Dict contains 'day': int, 'pnl': float, 'trades': int
+    """
+    if not calendar_data:
+        st.error("No calendar data provided")
+        return
+        
     days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']  # iOS starts with Sunday
     
     st.markdown("""
@@ -215,7 +224,7 @@ def render_ios_calendar(calendar_data):
         .ios-today-cell .ios-date-number,
         .ios-today-cell .ios-pnl-amount,
         .ios-today-cell .ios-trade-count {
-            color: #ffffff;
+            color: #ffffff !important;
         }
         
         .ios-profit-indicator {
@@ -260,52 +269,61 @@ def render_ios_calendar(calendar_data):
         </style>
     """, unsafe_allow_html=True)
     
-    # Start calendar container
-    st.markdown('<div class="ios-calendar-container">', unsafe_allow_html=True)
-    
-    # Render day headers
-    st.markdown('<div class="ios-calendar-header">', unsafe_allow_html=True)
-    for day in days:
-        st.markdown(f'<div class="ios-day-label">{day}</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Start calendar grid
-    st.markdown('<div class="ios-calendar-grid">', unsafe_allow_html=True)
-    
-    # Get current date for highlighting today
-    from datetime import datetime
-    today = datetime.now().day
-    
-    # Render calendar cells
-    for week in calendar_data:
-        for day in week:
-            if day is None:
-                st.markdown('<div class="ios-empty-cell"></div>', unsafe_allow_html=True)
-            else:
-                pnl = day['pnl']
-                trades = day['trades']
-                
-                # Determine if this cell is today
-                is_today = day['day'] == today
-                cell_class = 'ios-today-cell' if is_today else 'ios-cell-hover'
-                
-                # Set profit/loss indicator color
-                indicator_color = '#34C759' if pnl > 0 else '#FF3B30' if pnl < 0 else 'transparent'
-                pnl_color = '#34C759' if pnl > 0 else '#FF3B30' if pnl < 0 else '#8e8e93'
-                
-                st.markdown(f"""
-                    <div class="ios-calendar-cell {cell_class}">
-                        <div class="ios-date-number">{day['day']}</div>
-                        <div class="ios-pnl-amount" style="color: {pnl_color if not is_today else '#ffffff'}">
-                            ${abs(pnl):,.0f}
-                        </div>
-                        <div class="ios-trade-count">{trades}t</div>
-                        <div class="ios-profit-indicator" style="background-color: {indicator_color}"></div>
-                    </div>
-                """, unsafe_allow_html=True)
-    
-    # Close calendar grid and container
-    st.markdown('</div></div>', unsafe_allow_html=True)
+    try:
+        # Start calendar container
+        st.markdown('<div class="ios-calendar-container">', unsafe_allow_html=True)
+        
+        # Render day headers
+        st.markdown('<div class="ios-calendar-header">', unsafe_allow_html=True)
+        for day in days:
+            st.markdown(f'<div class="ios-day-label">{day}</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Start calendar grid
+        st.markdown('<div class="ios-calendar-grid">', unsafe_allow_html=True)
+        
+        # Get current date for highlighting today
+        from datetime import datetime
+        today = datetime.now().day
+        
+        # Render calendar cells
+        for week in calendar_data:
+            for day in week:
+                if day is None:
+                    st.markdown('<div class="ios-empty-cell"></div>', unsafe_allow_html=True)
+                else:
+                    try:
+                        pnl = day.get('pnl', 0)
+                        trades = day.get('trades', 0)
+                        day_num = day.get('day', '')
+                        
+                        # Determine if this cell is today
+                        is_today = day_num == today
+                        cell_class = 'ios-today-cell' if is_today else 'ios-cell-hover'
+                        
+                        # Set profit/loss indicator color
+                        indicator_color = '#34C759' if pnl > 0 else '#FF3B30' if pnl < 0 else 'transparent'
+                        pnl_color = '#34C759' if pnl > 0 else '#FF3B30' if pnl < 0 else '#8e8e93'
+                        
+                        st.markdown(f"""
+                            <div class="ios-calendar-cell {cell_class}">
+                                <div class="ios-date-number">{day_num}</div>
+                                <div class="ios-pnl-amount" style="color: {pnl_color}">
+                                    ${abs(pnl):,.0f}
+                                </div>
+                                <div class="ios-trade-count">{trades}t</div>
+                                <div class="ios-profit-indicator" style="background-color: {indicator_color}"></div>
+                            </div>
+                        """, unsafe_allow_html=True)
+                    except (KeyError, TypeError) as e:
+                        st.error(f"Invalid day data format: {e}")
+                        continue
+        
+        # Close calendar grid and container
+        st.markdown('</div></div>', unsafe_allow_html=True)
+        
+    except Exception as e:
+        st.error(f"Error rendering calendar: {str(e)}")
 
 def render_weekly_details(trades_df, week_start_date, starting_balance):
     stats = calculate_weekly_detailed_stats(trades_df, week_start_date, starting_balance)
