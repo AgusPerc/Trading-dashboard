@@ -1349,6 +1349,42 @@
             "symbol": "OGEN",
             "type": "Short",
             "realized": -160.14
+        },
+        {
+            "date": "2025-02-06",
+            "symbol": "LIPO",
+            "type": "Short",
+            "realized": 1155.9
+        },
+        {
+            "date": "2025-02-07",
+            "symbol": "CYTH",
+            "type": "Short",
+            "realized": -471.3
+        },
+        {
+            "date": "2025-02-07",
+            "symbol": "MGOL",
+            "type": "Short",
+            "realized": -2018.93
+        },
+        {
+            "date": "2025-02-07",
+            "symbol": "CDT",
+            "type": "Short",
+            "realized": -1144.16
+        },
+        {
+            "date": "2025-02-10",
+            "symbol": "BDRX",
+            "type": "Short",
+            "realized": 1794.48
+        },
+        {
+            "date": "2025-02-11",
+            "symbol": "DOMH",
+            "type": "Short",
+            "realized": -391.47
         }
     ],
     "locates": [
@@ -2426,6 +2462,36 @@
             "date": "2025-02-05",
             "symbol": "OGEN",
             "totalCost": 1.28
+        },
+        {
+            "date": "2025-02-06",
+            "symbol": "LIPO",
+            "totalCost": 196.25
+        },
+        {
+            "date": "2025-02-07",
+            "symbol": "CYTH",
+            "totalCost": 6.44
+        },
+        {
+            "date": "2025-02-07",
+            "symbol": "MGOL",
+            "totalCost": 22.636
+        },
+        {
+            "date": "2025-02-07",
+            "symbol": "CDT",
+            "totalCost": 104.58
+        },
+        {
+            "date": "2025-02-10",
+            "symbol": "BDRX",
+            "totalCost": 47.42
+        },
+        {
+            "date": "2025-02-11",
+            "symbol": "DOMH",
+            "totalCost": 1.25
         }
     ],
     "starting_balance": 75000
