@@ -141,151 +141,166 @@ def create_modern_calendar_view(trades_df, year, month):
     
     return calendar_data
 
-def render_modern_calendar(calendar_data):
-    days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+def render_ios_calendar(calendar_data):
+    days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']  # iOS starts with Sunday
     
     st.markdown("""
         <style>
-        .calendar-container {
-            background: #1e1e1e;
-            border-radius: 12px;
-            padding: 8px;
-            margin-bottom: 16px;
+        .ios-calendar-container {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
         }
         
-        .calendar-header {
+        .ios-calendar-header {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            margin-bottom: 8px;
-            padding: 4px;
+            gap: 2px;
+            margin-bottom: 10px;
         }
         
-        .day-label {
-            color: #808080;
-            font-size: 0.75rem;
+        .ios-day-label {
+            color: #8e8e93;
+            font-size: 13px;
             text-align: center;
             font-weight: 500;
+            padding: 8px 0;
         }
         
-        .calendar-grid {
+        .ios-calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
+            gap: 2px;
         }
         
-        .calendar-cell {
+        .ios-calendar-cell {
             position: relative;
-            background: #2d2d2d;
-            border-radius: 8px;
-            padding-top: 100%; /* Creates a square aspect ratio */
-        }
-        
-        .cell-content {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 4px;
+            aspect-ratio: 1;
+            border-radius: 50%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
         }
         
-        .date-number {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #e0e0e0;
+        .ios-date-number {
+            font-size: 16px;
+            font-weight: 400;
+            color: #1c1c1e;
+            margin-bottom: 2px;
         }
         
-        .pnl-amount {
-            font-size: 0.75rem;
+        .ios-pnl-amount {
+            font-size: 10px;
             font-weight: 500;
-            text-align: right;
         }
         
-        .trade-count {
-            font-size: 0.625rem;
-            color: #808080;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            padding: 1px 4px;
-            display: inline-block;
-            margin-left: auto;
+        .ios-trade-count {
+            font-size: 9px;
+            color: #8e8e93;
+            margin-top: 1px;
         }
         
-        .empty-cell {
-            background: #262626;
-            border-radius: 8px;
-            padding-top: 100%;
+        .ios-empty-cell {
+            background: transparent;
         }
         
-        .positive-cell {
-            background: linear-gradient(135deg, #2d2d2d, rgba(0, 255, 157, 0.15));
-            border: 1px solid rgba(0, 255, 157, 0.2);
+        .ios-today-cell {
+            background: #007AFF;
         }
         
-        .negative-cell {
-            background: linear-gradient(135deg, #2d2d2d, rgba(255, 77, 77, 0.15));
-            border: 1px solid rgba(255, 77, 77, 0.2);
+        .ios-today-cell .ios-date-number,
+        .ios-today-cell .ios-pnl-amount,
+        .ios-today-cell .ios-trade-count {
+            color: #ffffff;
+        }
+        
+        .ios-profit-indicator {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            margin-top: 2px;
+        }
+        
+        .ios-cell-hover:hover {
+            background: rgba(0, 0, 0, 0.05);
+            transition: background 0.2s ease;
         }
         
         @media (max-width: 480px) {
-            .calendar-container {
-                padding: 4px;
+            .ios-calendar-container {
+                padding: 12px;
             }
-            .calendar-grid {
-                gap: 2px;
+            .ios-date-number {
+                font-size: 14px;
             }
-            .date-number {
-                font-size: 0.75rem;
+            .ios-pnl-amount {
+                font-size: 9px;
             }
-            .pnl-amount {
-                font-size: 0.625rem;
+            .ios-trade-count {
+                font-size: 8px;
             }
-            .trade-count {
-                font-size: 0.5rem;
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .ios-calendar-container {
+                background: #1c1c1e;
+            }
+            .ios-date-number {
+                color: #ffffff;
+            }
+            .ios-cell-hover:hover {
+                background: rgba(255, 255, 255, 0.1);
             }
         }
         </style>
     """, unsafe_allow_html=True)
     
     # Start calendar container
-    st.markdown('<div class="calendar-container">', unsafe_allow_html=True)
+    st.markdown('<div class="ios-calendar-container">', unsafe_allow_html=True)
     
     # Render day headers
-    st.markdown('<div class="calendar-header">', unsafe_allow_html=True)
+    st.markdown('<div class="ios-calendar-header">', unsafe_allow_html=True)
     for day in days:
-        st.markdown(f'<div class="day-label">{day}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="ios-day-label">{day}</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
     
     # Start calendar grid
-    st.markdown('<div class="calendar-grid">', unsafe_allow_html=True)
+    st.markdown('<div class="ios-calendar-grid">', unsafe_allow_html=True)
     
-    # Calculate max PnL for color intensity
-    max_pnl = max([abs(day['pnl']) for week in calendar_data for day in week if day is not None], default=1)
+    # Get current date for highlighting today
+    from datetime import datetime
+    today = datetime.now().day
     
     # Render calendar cells
     for week in calendar_data:
         for day in week:
             if day is None:
-                st.markdown('<div class="empty-cell"></div>', unsafe_allow_html=True)
+                st.markdown('<div class="ios-empty-cell"></div>', unsafe_allow_html=True)
             else:
                 pnl = day['pnl']
                 trades = day['trades']
-                cell_class = 'positive-cell' if pnl > 0 else 'negative-cell' if pnl < 0 else ''
-                pnl_color = '#00ff9d' if pnl > 0 else '#ff4d4d' if pnl < 0 else '#808080'
+                
+                # Determine if this cell is today
+                is_today = day['day'] == today
+                cell_class = 'ios-today-cell' if is_today else 'ios-cell-hover'
+                
+                # Set profit/loss indicator color
+                indicator_color = '#34C759' if pnl > 0 else '#FF3B30' if pnl < 0 else 'transparent'
+                pnl_color = '#34C759' if pnl > 0 else '#FF3B30' if pnl < 0 else '#8e8e93'
                 
                 st.markdown(f"""
-                    <div class="calendar-cell {cell_class}">
-                        <div class="cell-content">
-                            <div class="date-number">{day['day']}</div>
-                            <div>
-                                <div class="pnl-amount" style="color: {pnl_color}">${pnl:,.0f}</div>
-                                <div class="trade-count">{trades}t</div>
-                            </div>
+                    <div class="ios-calendar-cell {cell_class}">
+                        <div class="ios-date-number">{day['day']}</div>
+                        <div class="ios-pnl-amount" style="color: {pnl_color if not is_today else '#ffffff'}">
+                            ${abs(pnl):,.0f}
                         </div>
+                        <div class="ios-trade-count">{trades}t</div>
+                        <div class="ios-profit-indicator" style="background-color: {indicator_color}"></div>
                     </div>
                 """, unsafe_allow_html=True)
     
