@@ -726,9 +726,7 @@ def main():
             st.info("No locates recorded yet")
 
     with tab3:
-        # Monthly Performance Tab
-        # Monthly Performance Tab
-if data['trades']:
+        if data['trades']:
     trades_df = pd.DataFrame(data['trades'])
     trades_df['date'] = pd.to_datetime(trades_df['date'])
     
