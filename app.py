@@ -320,12 +320,35 @@ def render_weekly_details(trades_df, week_start_date, starting_balance):
         """, unsafe_allow_html=True)
 
 # Function to calculate monthly statistics
-def calculate_monthly_detailed_stats(trades_df, month_start_date, starting_balance):
+def calculate_monthly_stats(trades_df):
+    # Ensure date column is datetime
+    trades_df['date'] = pd.to_datetime(trades_df['date'])
+    
+    # Group by month and calculate monthly statistics
+    monthly_stats = trades_df.groupby(pd.Grouper(key='date', freq='M')).agg({
+        'realized': 'sum',
+        'symbol': 'count'  # Number of trades
+    }).reset_index()
+    
+    # Rename columns for clarity
+    monthly_stats.columns = ['Month', 'Monthly P&L', 'Number of Trades']
+    
+    # Calculate cumulative P&L
+    monthly_stats['Cumulative P&L'] = monthly_stats['Monthly P&L'].cumsum()
+    
+    # Calculate monthly win/loss ratio
+    monthly_stats['Win/Loss Ratio'] = monthly_stats.apply(
+        lambda row: 'Positive' if row['Monthly P&L'] > 0 else 'Negative', 
+        axis=1
+    )
+    
+    return monthly_stats
+
+def calculate_advanced_monthly_stats(trades_df, month_year, starting_balance):
     # Filter trades for the specific month
-    month_end_date = month_start_date + pd.offsets.MonthEnd(1)
     monthly_trades = trades_df[
-        (trades_df['date'] >= month_start_date) & 
-        (trades_df['date'] <= month_end_date)
+        (trades_df['date'].dt.year == month_year.year) & 
+        (trades_df['date'].dt.month == month_year.month)
     ]
     
     if monthly_trades.empty:
@@ -340,28 +363,20 @@ def calculate_monthly_detailed_stats(trades_df, month_start_date, starting_balan
     
     # Win rate calculation
     profitable_trades = monthly_trades[monthly_trades['realized'] > 0]
-    win_rate = len(profitable_trades) / total_trades * 100 if total_trades > 0 else 0
+    win_rate = len(profitable_trades) / total_trades * 100
     
     # Average win/loss
     avg_win = profitable_trades['realized'].mean() if len(profitable_trades) > 0 else 0
     losing_trades = monthly_trades[monthly_trades['realized'] <= 0]
     avg_loss = losing_trades['realized'].mean() if len(losing_trades) > 0 else 0
     
-    # Largest win/loss
-    largest_win = profitable_trades['realized'].max() if len(profitable_trades) > 0 else 0
-    largest_loss = losing_trades['realized'].min() if len(losing_trades) > 0 else 0
-    
     # Day of week performance
     monthly_trades['day_of_week'] = monthly_trades['date'].dt.day_name()
     day_performance = monthly_trades.groupby('day_of_week')['realized'].agg(['sum', 'count'])
     day_performance['avg_pnl'] = day_performance['sum'] / day_performance['count']
-    best_day = day_performance['avg_pnl'].idxmax() if not day_performance.empty else "N/A"
+    best_day = day_performance['avg_pnl'].idxmax()
     
-    # Symbol performance
-    symbol_performance = monthly_trades.groupby('symbol')['realized'].agg(['sum', 'count'])
-    symbol_performance['avg_pnl'] = symbol_performance['sum'] / symbol_performance['count']
-    best_symbol = symbol_performance['sum'].idxmax() if not symbol_performance.empty else "N/A"
-    
+    # Detailed results
     results = {
         'Total Trades': total_trades,
         'Total P&L': total_pnl,
@@ -369,117 +384,11 @@ def calculate_monthly_detailed_stats(trades_df, month_start_date, starting_balan
         'Win Rate': win_rate,
         'Average Win': avg_win,
         'Average Loss': avg_loss,
-        'Largest Win': largest_win,
-        'Largest Loss': largest_loss,
         'Best Day': best_day,
-        'Best Symbol': best_symbol,
-        'Day Performance': day_performance,
-        'Symbol Performance': symbol_performance
+        'Day Performance': day_performance
     }
     
     return results
-
-def render_monthly_details(trades_df, month_start_date, starting_balance):
-    stats = calculate_monthly_detailed_stats(trades_df, month_start_date, starting_balance)
-    
-    if stats:
-        # Main metrics in modern cards with dark theme
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            pnl_color = '#00ff9d' if stats['Total P&L'] > 0 else '#ff4d4d'
-            pnl_formatted = "${:,.2f}".format(stats['Total P&L'])
-            
-            st.markdown(f"""
-                <div style='background-color: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'>
-                    <h3 style='color: #e0e0e0;'>Performance</h3>
-                    <div style='font-size: 1.8em; font-weight: bold; color: {pnl_color};'>{pnl_formatted}</div>
-                    <div style='color: #b0b0b0;'>Total P&L</div>
-                </div>
-            """, unsafe_allow_html=True)
-            
-        with col2:
-            win_rate_formatted = "{:.1f}%".format(stats['Win Rate'])
-            st.markdown(f"""
-                <div style='background-color: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'>
-                    <h3 style='color: #e0e0e0;'>Win Rate</h3>
-                    <div style='font-size: 1.8em; font-weight: bold; color: #e0e0e0;'>{win_rate_formatted}</div>
-                    <div style='color: #b0b0b0;'>{stats['Total Trades']} Total Trades</div>
-                </div>
-            """, unsafe_allow_html=True)
-            
-        with col3:
-            portfolio_change_formatted = "{:+.2f}%".format(stats['Portfolio Change'])
-            change_color = '#00ff9d' if stats['Portfolio Change'] > 0 else '#ff4d4d'
-            st.markdown(f"""
-                <div style='background-color: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'>
-                    <h3 style='color: #e0e0e0;'>Portfolio Change</h3>
-                    <div style='font-size: 1.8em; font-weight: bold; color: {change_color};'>{portfolio_change_formatted}</div>
-                    <div style='color: #b0b0b0;'>Monthly Return</div>
-                </div>
-            """, unsafe_allow_html=True)
-        
-        # Additional statistics
-        st.markdown("<h3 style='color: #e0e0e0;'>Trade Statistics</h3>", unsafe_allow_html=True)
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown(f"""
-                <div style='background-color: #1e1e1e; padding: 15px; border-radius: 10px; margin: 10px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'>
-                    <div style='color: #00ff9d; font-weight: bold;'>Average Win: ${stats['Average Win']:,.2f}</div>
-                    <div style='color: #ff4d4d; font-weight: bold;'>Average Loss: ${stats['Average Loss']:,.2f}</div>
-                </div>
-            """, unsafe_allow_html=True)
-            
-        with col2:
-            st.markdown(f"""
-                <div style='background-color: #1e1e1e; padding: 15px; border-radius: 10px; margin: 10px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'>
-                    <div style='color: #00ff9d; font-weight: bold;'>Largest Win: ${stats['Largest Win']:,.2f}</div>
-                    <div style='color: #ff4d4d; font-weight: bold;'>Largest Loss: ${stats['Largest Loss']:,.2f}</div>
-                </div>
-            """, unsafe_allow_html=True)
-        
-        # Day performance analysis
-        st.markdown("<h3 style='color: #e0e0e0;'>Daily Performance</h3>", unsafe_allow_html=True)
-        day_perf = stats['Day Performance']
-        
-        # Create bar chart for daily performance with dark theme
-        fig = go.Figure()
-        fig.add_trace(go.Bar(
-            x=day_perf.index,
-            y=day_perf['sum'],
-            marker_color=['#00ff9d' if x > 0 else '#ff4d4d' for x in day_perf['sum']],
-            name='Daily P&L'
-        ))
-        
-        fig.update_layout(
-            title='P&L by Day of Week',
-            xaxis_title='Day of Week',
-            yaxis_title='P&L ($)',
-            height=300,
-            margin=dict(l=20, r=20, t=40, b=20),
-            paper_bgcolor='#1e1e1e',
-            plot_bgcolor='#1e1e1e',
-            font=dict(color='#e0e0e0'),
-            xaxis=dict(
-                gridcolor='#333333',
-                zerolinecolor='#333333'
-            ),
-            yaxis=dict(
-                gridcolor='#333333',
-                zerolinecolor='#333333'
-            )
-        )
-        
-        st.plotly_chart(fig, use_container_width=True)
-        
-        # Best performing metrics
-        st.markdown(f"""
-            <div style='background-color: #1e1e1e; padding: 15px; border-radius: 10px; margin: 10px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'>
-                <div style='color: #e0e0e0; font-weight: bold;'>🏆 Best Trading Day: {stats['Best Day']}</div>
-                <div style='color: #e0e0e0; font-weight: bold;'>💫 Best Symbol: {stats['Best Symbol']}</div>
-            </div>
-        """, unsafe_allow_html=True)
 
 # Function to calculate latest daily P&L
 def calculate_latest_daily_pnl(trades, starting_balance):
@@ -603,7 +512,7 @@ def main():
         st.sidebar.success("Trade data added successfully!")
 
     # Create tabs
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
         "Dashboard", "Trades", "Monthly Performance", 
         "Monthly Drill Down", "Weekly Performance", "Calendar View"
     ])
@@ -680,23 +589,34 @@ def main():
             st.info("No locates recorded yet")
 
     with tab3:
+        # Monthly Performance Tab
         if data['trades']:
             trades_df = pd.DataFrame(data['trades'])
             trades_df['date'] = pd.to_datetime(trades_df['date'])
             
-            # Get available months
-            unique_months = trades_df['date'].dt.to_period('M').unique()
-            selected_month = st.selectbox(
-                "Select Month", 
-                sorted(unique_months, reverse=True), 
-                format_func=lambda x: x.strftime("%B %Y")
-            )
+            # Calculate monthly statistics
+            monthly_stats = calculate_monthly_stats(trades_df)
             
-            # Pass starting_balance to the function
-            selected_month_date = selected_month.to_timestamp()
-            render_monthly_details(trades_df, selected_month_date, data.get('starting_balance', 50000))
-        else:
-            st.info("No trades recorded yet to generate monthly performance")
+            # Display monthly statistics table
+            st.subheader("Monthly Performance Summary")
+            st.dataframe(monthly_stats, use_container_width=True)
+            
+            # Monthly P&L Bar Chart
+            st.subheader("Monthly P&L Breakdown")
+            fig_monthly = go.Figure(data=[
+                go.Bar(
+                    x=monthly_stats['Month'].dt.strftime('%Y-%m'),
+                    y=monthly_stats['Monthly P&L'],
+                    marker_color=monthly_stats['Monthly P&L'].apply(lambda x: 'green' if x > 0 else 'red')
+                )
+            ])
+            fig_monthly.update_layout(
+                title='Monthly P&L',
+                xaxis_title='Month',
+                yaxis_title='P&L ($)',
+                height=400
+            )
+            st.plotly_chart(fig_monthly, use_container_width=True)
             
             # Cumulative P&L Line Chart
             st.subheader("Cumulative P&L Over Time")
@@ -714,9 +634,74 @@ def main():
                 height=400
             )
             st.plotly_chart(fig_cumulative, use_container_width=True)
+        else:
             st.info("No trades recorded yet to generate monthly performance")
 
     with tab4:
+        if data['trades']:
+            trades_df = pd.DataFrame(data['trades'])
+            trades_df['date'] = pd.to_datetime(trades_df['date'])
+            
+            unique_months = trades_df['date'].dt.to_period('M').unique()
+            
+            selected_month = st.selectbox(
+                "Select Month", 
+                sorted(unique_months, reverse=True), 
+                format_func=lambda x: x.strftime("%B %Y")
+            )
+            
+            # Pass starting_balance to the function
+            monthly_stats = calculate_advanced_monthly_stats(trades_df, selected_month.to_timestamp(), data.get('starting_balance', 50000))
+            
+            if monthly_stats:
+                st.subheader(f"Monthly Statistics for {selected_month.strftime('%B %Y')}")
+                
+                # Main metrics
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Total Trades", monthly_stats['Total Trades'])
+                    st.metric("Total P&L", f"${monthly_stats['Total P&L']:,.2f}")
+                
+                with col2:
+                    st.metric("Win Rate", f"{monthly_stats['Win Rate']:.2f}%")
+                    st.metric("Average Win", f"${monthly_stats['Average Win']:,.2f}")
+                
+                with col3:
+                    st.metric("Portfolio Change", f"{monthly_stats['Portfolio Change']:.2f}%")
+                    st.metric("Average Loss", f"${monthly_stats['Average Loss']:,.2f}")
+                
+                # Day of Week Performance
+                st.subheader("Day of Week Performance")
+                day_perf_df = monthly_stats['Day Performance'].reset_index()
+                day_perf_df.columns = ['Day', 'Total P&L', 'Trade Count', 'Avg P&L']
+                st.dataframe(day_perf_df, use_container_width=True)
+                
+                # Bar chart of day performance
+                fig_day_perf = go.Figure(data=[
+                    go.Bar(
+                        x=day_perf_df['Day'],
+                        y=day_perf_df['Avg P&L'],
+                        marker_color=day_perf_df['Avg P&L'].apply(lambda x: 'green' if x > 0 else 'red')
+                    )
+                ])
+                fig_day_perf.update_layout(
+                    title='Average P&L by Day of Week',
+                    xaxis_title='Day of Week',
+                    yaxis_title='Average P&L ($)',
+                    height=400
+                )
+                st.plotly_chart(fig_day_perf, use_container_width=True)
+                
+                # Highlight best day
+                st.info(f"Best Performing Day: {monthly_stats['Best Day']}")
+            
+            else:
+                st.warning("No trades for the selected month")
+        
+        else:
+            st.info("No trades recorded yet to generate monthly drill-down")
+
+    with tab5:
         if data['trades']:
             trades_df = pd.DataFrame(data['trades'])
             trades_df['date'] = pd.to_datetime(trades_df['date'])
@@ -734,7 +719,7 @@ def main():
         else:
             st.info("No trades recorded yet to generate weekly performance")
     
-    with tab5:
+    with tab6:
         if data['trades']:
             trades_df = pd.DataFrame(data['trades'])
             trades_df['date'] = pd.to_datetime(trades_df['date'])
