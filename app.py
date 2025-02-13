@@ -734,10 +734,12 @@ def main():
             # Get available months
             unique_months = trades_df['date'].dt.to_period('M').unique()
             selected_month = st.selectbox(
-                "Select Month", 
-                sorted(unique_months, reverse=True), 
-                format_func=lambda x: x.strftime("%B %Y")
-            )
+            "Select Month",
+            sorted(unique_months, reverse=True),
+            format_func=lambda x: x.strftime("%B %Y"),
+            key="monthly_performance_selectbox"
+        )
+
             
             # Pass starting_balance to the function
             selected_month_date = selected_month.to_timestamp()
@@ -753,10 +755,12 @@ def main():
             unique_months = trades_df['date'].dt.to_period('M').unique()
             
             selected_month = st.selectbox(
-                "Select Month", 
-                sorted(unique_months, reverse=True), 
-                format_func=lambda x: x.strftime("%B %Y")
-            )
+            "Select Month",
+            sorted(unique_months, reverse=True),
+            format_func=lambda x: x.strftime("%B %Y"),
+            key="monthly_drilldown_selectbox"
+        )
+
             
             # Pass starting_balance to the function
             monthly_stats = calculate_advanced_monthly_stats(trades_df, selected_month.to_timestamp(), data.get('starting_balance', 50000))
@@ -837,14 +841,17 @@ def main():
             with col1:
                 selected_year = st.selectbox(
                     "Select Year",
-                    sorted(trades_df['date'].dt.year.unique(), reverse=True)
+                    sorted(trades_df['date'].dt.year.unique(), reverse=True),
+                    key="calendar_year_selectbox"
                 )
             with col2:
                 selected_month = st.selectbox(
                     "Select Month",
                     range(1, 13),
-                    format_func=lambda x: datetime(2000, x, 1).strftime('%B')
+                    format_func=lambda x: datetime(2000, x, 1).strftime('%B'),
+                    key="calendar_month_selectbox"
                 )
+
             
             calendar_data = create_modern_calendar_view(trades_df, selected_year, selected_month)
             render_modern_calendar(calendar_data)
