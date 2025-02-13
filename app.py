@@ -760,7 +760,6 @@ def main():
                 height=400
             )
             st.plotly_chart(fig_cumulative, use_container_width=True)
-        else:
             st.info("No trades recorded yet to generate monthly performance")
 
     with tab4:
