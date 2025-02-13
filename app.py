@@ -603,7 +603,7 @@ def main():
         st.sidebar.success("Trade data added successfully!")
 
     # Create tabs
-    tab1, tab2, tab3, tab5, tab6 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "Dashboard", "Trades", "Monthly Performance", 
         "Monthly Drill Down", "Weekly Performance", "Calendar View"
     ])
@@ -716,7 +716,7 @@ def main():
             st.plotly_chart(fig_cumulative, use_container_width=True)
             st.info("No trades recorded yet to generate monthly performance")
 
-    with tab5:
+    with tab4:
         if data['trades']:
             trades_df = pd.DataFrame(data['trades'])
             trades_df['date'] = pd.to_datetime(trades_df['date'])
@@ -734,7 +734,7 @@ def main():
         else:
             st.info("No trades recorded yet to generate weekly performance")
     
-    with tab6:
+    with tab5:
         if data['trades']:
             trades_df = pd.DataFrame(data['trades'])
             trades_df['date'] = pd.to_datetime(trades_df['date'])
