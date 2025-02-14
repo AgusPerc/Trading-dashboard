@@ -1397,6 +1397,18 @@
             "symbol": "NXU",
             "type": "Short",
             "realized": 204.36
+        },
+        {
+            "date": "2025-02-13",
+            "symbol": "AMOD",
+            "type": "Short",
+            "realized": 238.36
+        },
+        {
+            "date": "2025-02-13",
+            "symbol": "PEV",
+            "type": "Short",
+            "realized": -1870.55
         }
     ],
     "locates": [
@@ -2514,6 +2526,16 @@
             "date": "2025-02-12",
             "symbol": "NXU",
             "totalCost": 94.05
+        },
+        {
+            "date": "2025-02-13",
+            "symbol": "AMOD",
+            "totalCost": 59.36
+        },
+        {
+            "date": "2025-02-13",
+            "symbol": "PEV",
+            "totalCost": 20.15
         }
     ],
     "starting_balance": 75000
