@@ -1409,6 +1409,18 @@
             "symbol": "PEV",
             "type": "Short",
             "realized": -1870.55
+        },
+        {
+            "date": "2025-02-14",
+            "symbol": "JTAI",
+            "type": "Short",
+            "realized": 21.99
+        },
+        {
+            "date": "2025-02-14",
+            "symbol": "SRM",
+            "type": "Short",
+            "realized": -1248.94
         }
     ],
     "locates": [
@@ -2536,6 +2548,16 @@
             "date": "2025-02-13",
             "symbol": "PEV",
             "totalCost": 20.15
+        },
+        {
+            "date": "2025-02-14",
+            "symbol": "JTAI",
+            "totalCost": 6.923
+        },
+        {
+            "date": "2025-02-14",
+            "symbol": "SRM",
+            "totalCost": 10.666
         }
     ],
     "starting_balance": 75000
