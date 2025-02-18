@@ -1421,6 +1421,12 @@
             "symbol": "SRM",
             "type": "Short",
             "realized": -1248.94
+        },
+        {
+            "date": "2025-02-18",
+            "symbol": "PRFX",
+            "type": "Short",
+            "realized": 925.16
         }
     ],
     "locates": [
@@ -2558,6 +2564,11 @@
             "date": "2025-02-14",
             "symbol": "SRM",
             "totalCost": 10.666
+        },
+        {
+            "date": "2025-02-18",
+            "symbol": "PRFX",
+            "totalCost": 28.275
         }
     ],
     "starting_balance": 75000
