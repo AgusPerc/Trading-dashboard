@@ -1427,6 +1427,24 @@
             "symbol": "PRFX",
             "type": "Short",
             "realized": 925.16
+        },
+        {
+            "date": "2025-02-19",
+            "symbol": "SINT",
+            "type": "Short",
+            "realized": -0.025
+        },
+        {
+            "date": "2025-02-19",
+            "symbol": "LYT",
+            "type": "Short",
+            "realized": -670.715
+        },
+        {
+            "date": "2025-02-20",
+            "symbol": "WOK",
+            "type": "Short",
+            "realized": 3059.03
         }
     ],
     "locates": [
@@ -2569,6 +2587,21 @@
             "date": "2025-02-18",
             "symbol": "PRFX",
             "totalCost": 28.275
+        },
+        {
+            "date": "2025-02-19",
+            "symbol": "SINT",
+            "totalCost": 22.275
+        },
+        {
+            "date": "2025-02-19",
+            "symbol": "LYT",
+            "totalCost": 19.87
+        },
+        {
+            "date": "2025-02-20",
+            "symbol": "WOK",
+            "totalCost": 7.013
         }
     ],
     "starting_balance": 75000
