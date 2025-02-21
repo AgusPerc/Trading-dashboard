@@ -1445,6 +1445,18 @@
             "symbol": "WOK",
             "type": "Short",
             "realized": 3059.03
+        },
+        {
+            "date": "2025-02-21",
+            "symbol": "MLGO",
+            "type": "Short",
+            "realized": -3223.66
+        },
+        {
+            "date": "2025-02-21",
+            "symbol": "UPC",
+            "type": "Short",
+            "realized": 920.12
         }
     ],
     "locates": [
@@ -2602,6 +2614,16 @@
             "date": "2025-02-20",
             "symbol": "WOK",
             "totalCost": 7.013
+        },
+        {
+            "date": "2025-02-21",
+            "symbol": "MLGO",
+            "totalCost": 1.435
+        },
+        {
+            "date": "2025-02-21",
+            "symbol": "UPC",
+            "totalCost": 2.38
         }
     ],
     "starting_balance": 75000
