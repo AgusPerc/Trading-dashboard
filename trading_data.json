@@ -1457,6 +1457,36 @@
             "symbol": "UPC",
             "type": "Short",
             "realized": 920.12
+        },
+        {
+            "date": "2025-02-24",
+            "symbol": "ATCH",
+            "type": "Short",
+            "realized": 869.29
+        },
+        {
+            "date": "2025-02-24",
+            "symbol": "PEPG",
+            "type": "Short",
+            "realized": 303.87
+        },
+        {
+            "date": "2025-02-24",
+            "symbol": "RETO",
+            "type": "Short",
+            "realized": 1910.94
+        },
+        {
+            "date": "2025-02-24",
+            "symbol": "YYAI",
+            "type": "Short",
+            "realized": -3882.912
+        },
+        {
+            "date": "2025-02-24",
+            "symbol": "STEC",
+            "type": "Short",
+            "realized": -987.442
         }
     ],
     "locates": [
@@ -2624,6 +2654,31 @@
             "date": "2025-02-21",
             "symbol": "UPC",
             "totalCost": 2.38
+        },
+        {
+            "date": "2025-02-24",
+            "symbol": "ATCH",
+            "totalCost": 87.71
+        },
+        {
+            "date": "2025-02-24",
+            "symbol": "PEPG",
+            "totalCost": 2.184
+        },
+        {
+            "date": "2025-02-24",
+            "symbol": "RETO",
+            "totalCost": 15.746
+        },
+        {
+            "date": "2025-02-24",
+            "symbol": "YYAI",
+            "totalCost": 11.254
+        },
+        {
+            "date": "2025-02-24",
+            "symbol": "STEC",
+            "totalCost": 6.86
         }
     ],
     "starting_balance": 75000
