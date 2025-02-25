@@ -1487,6 +1487,24 @@
             "symbol": "STEC",
             "type": "Short",
             "realized": -987.442
+        },
+        {
+            "date": "2025-02-25",
+            "symbol": "FMTO",
+            "type": "Short",
+            "realized": -129.72
+        },
+        {
+            "date": "2025-02-25",
+            "symbol": "ONVO",
+            "type": "Short",
+            "realized": -3118.1
+        },
+        {
+            "date": "2025-02-25",
+            "symbol": "WAFU",
+            "type": "Short",
+            "realized": 1512.63
         }
     ],
     "locates": [
@@ -2679,6 +2697,21 @@
             "date": "2025-02-24",
             "symbol": "STEC",
             "totalCost": 6.86
+        },
+        {
+            "date": "2025-02-25",
+            "symbol": "FMTO",
+            "totalCost": 76.5
+        },
+        {
+            "date": "2025-02-25",
+            "symbol": "ONVO",
+            "totalCost": 8.166
+        },
+        {
+            "date": "2025-02-25",
+            "symbol": "WAFU",
+            "totalCost": 0.775
         }
     ],
     "starting_balance": 75000
