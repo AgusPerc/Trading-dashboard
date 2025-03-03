@@ -1547,6 +1547,24 @@
             "symbol": "NVVE",
             "type": "Short",
             "realized": 796.7
+        },
+        {
+            "date": "2025-03-03",
+            "symbol": "ACON",
+            "type": "Short",
+            "realized": -3199.55
+        },
+        {
+            "date": "2025-03-03",
+            "symbol": "FTFT",
+            "type": "Short",
+            "realized": 1321.25
+        },
+        {
+            "date": "2025-03-03",
+            "symbol": "BTOG",
+            "type": "Short",
+            "realized": 750.71
         }
     ],
     "locates": [
@@ -2789,6 +2807,21 @@
             "date": "2025-02-28",
             "symbol": "NVVE",
             "totalCost": 54.924
+        },
+        {
+            "date": "2025-03-03",
+            "symbol": "ACON",
+            "totalCost": 110.785
+        },
+        {
+            "date": "2025-03-03",
+            "symbol": "FTFT",
+            "totalCost": 14.293
+        },
+        {
+            "date": "2025-03-03",
+            "symbol": "BTOG",
+            "totalCost": 123.39
         }
     ],
     "starting_balance": 75000
