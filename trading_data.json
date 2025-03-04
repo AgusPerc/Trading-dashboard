@@ -1565,6 +1565,18 @@
             "symbol": "BTOG",
             "type": "Short",
             "realized": 750.71
+        },
+        {
+            "date": "2025-03-04",
+            "symbol": "RDGT",
+            "type": "Short",
+            "realized": 3776.64
+        },
+        {
+            "date": "2025-03-04",
+            "symbol": "MASS",
+            "type": "Short",
+            "realized": 25.39
         }
     ],
     "locates": [
@@ -2822,6 +2834,11 @@
             "date": "2025-03-03",
             "symbol": "BTOG",
             "totalCost": 123.39
+        },
+        {
+            "date": "2025-03-04",
+            "symbol": "RDGT",
+            "totalCost": 269.625
         }
     ],
     "starting_balance": 75000
