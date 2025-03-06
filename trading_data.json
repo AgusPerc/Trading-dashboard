@@ -1577,6 +1577,18 @@
             "symbol": "MASS",
             "type": "Short",
             "realized": 25.39
+        },
+        {
+            "date": "2025-03-05",
+            "symbol": "GV",
+            "type": "Short",
+            "realized": -1033.19
+        },
+        {
+            "date": "2025-03-05",
+            "symbol": "ARBB",
+            "type": "Short",
+            "realized": -163.78
         }
     ],
     "locates": [
@@ -2839,6 +2851,16 @@
             "date": "2025-03-04",
             "symbol": "RDGT",
             "totalCost": 269.625
+        },
+        {
+            "date": "2025-03-05",
+            "symbol": "GV",
+            "totalCost": 20.0
+        },
+        {
+            "date": "2025-03-05",
+            "symbol": "ARBB",
+            "totalCost": 56.5
         }
     ],
     "starting_balance": 75000
