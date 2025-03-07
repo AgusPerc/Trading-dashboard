@@ -1589,6 +1589,24 @@
             "symbol": "ARBB",
             "type": "Short",
             "realized": -163.78
+        },
+        {
+            "date": "2025-03-06",
+            "symbol": "GV",
+            "type": "Short",
+            "realized": 1408.836666666667
+        },
+        {
+            "date": "2025-03-06",
+            "symbol": "PSTV",
+            "type": "Short",
+            "realized": -3366.6
+        },
+        {
+            "date": "2025-03-06",
+            "symbol": "AGMH",
+            "type": "Short",
+            "realized": -160.5
         }
     ],
     "locates": [
