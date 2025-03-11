@@ -1607,6 +1607,18 @@
             "symbol": "AGMH",
             "type": "Short",
             "realized": -160.5
+        },
+        {
+            "date": "2025-03-07",
+            "symbol": "SUNE",
+            "type": "Short",
+            "realized": -575.79
+        },
+        {
+            "date": "2025-03-10",
+            "symbol": "XAGE",
+            "type": "Short",
+            "realized": -316.05
         }
     ],
     "locates": [
@@ -2879,6 +2891,16 @@
             "date": "2025-03-05",
             "symbol": "ARBB",
             "totalCost": 56.5
+        },
+        {
+            "date": "2025-03-07",
+            "symbol": "SUNE",
+            "totalCost": 21.5
+        },
+        {
+            "date": "2025-03-10",
+            "symbol": "XAGE",
+            "totalCost": 22.88
         }
     ],
     "starting_balance": 75000
