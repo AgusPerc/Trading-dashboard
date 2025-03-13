@@ -1619,6 +1619,24 @@
             "symbol": "XAGE",
             "type": "Short",
             "realized": -316.05
+        },
+        {
+            "date": "2025-03-11",
+            "symbol": "AWH",
+            "type": "Short",
+            "realized": 769.585
+        },
+        {
+            "date": "2025-03-11",
+            "symbol": "SYRS",
+            "type": "Short",
+            "realized": 1608.385
+        },
+        {
+            "date": "2025-03-12",
+            "symbol": "VSTE",
+            "type": "Short",
+            "realized": 876.65
         }
     ],
     "locates": [
@@ -2901,6 +2919,21 @@
             "date": "2025-03-10",
             "symbol": "XAGE",
             "totalCost": 22.88
+        },
+        {
+            "date": "2025-03-11",
+            "symbol": "AWH",
+            "totalCost": 91.0
+        },
+        {
+            "date": "2025-03-11",
+            "symbol": "SYRS",
+            "totalCost": 29.6
+        },
+        {
+            "date": "2025-03-12",
+            "symbol": "VSTE",
+            "totalCost": 57.5
         }
     ],
     "starting_balance": 75000
