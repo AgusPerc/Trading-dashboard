@@ -1637,6 +1637,18 @@
             "symbol": "VSTE",
             "type": "Short",
             "realized": 876.65
+        },
+        {
+            "date": "2025-03-13",
+            "symbol": "SPGC",
+            "type": "Short",
+            "realized": -45.89
+        },
+        {
+            "date": "2025-03-14",
+            "symbol": "BON",
+            "type": "Short",
+            "realized": 3421.94
         }
     ],
     "locates": [
@@ -2934,6 +2946,16 @@
             "date": "2025-03-12",
             "symbol": "VSTE",
             "totalCost": 57.5
+        },
+        {
+            "date": "2025-03-13",
+            "symbol": "SPGC",
+            "totalCost": 40.0
+        },
+        {
+            "date": "2025-03-14",
+            "symbol": "BON",
+            "totalCost": 430.0
         }
     ],
     "starting_balance": 75000
