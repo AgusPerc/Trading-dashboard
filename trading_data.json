@@ -1649,6 +1649,12 @@
             "symbol": "BON",
             "type": "Short",
             "realized": 3421.94
+        },
+        {
+            "date": "2025-03-17",
+            "symbol": "NAOV",
+            "type": "Short",
+            "realized": -820.22
         }
     ],
     "locates": [
@@ -2956,6 +2962,11 @@
             "date": "2025-03-14",
             "symbol": "BON",
             "totalCost": 430.0
+        },
+        {
+            "date": "2025-03-17",
+            "symbol": "NAOV",
+            "totalCost": 85.25
         }
     ],
     "starting_balance": 75000
