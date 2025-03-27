@@ -1655,6 +1655,90 @@
             "symbol": "NAOV",
             "type": "Short",
             "realized": -820.22
+        },
+        {
+            "date": "2025-03-20",
+            "symbol": "SAG",
+            "type": "Short",
+            "realized": 1852.12
+        },
+        {
+            "date": "2025-03-21",
+            "symbol": "ALUR",
+            "type": "Short",
+            "realized": -743.16
+        },
+        {
+            "date": "2025-03-24",
+            "symbol": "XHLD",
+            "type": "Short",
+            "realized": 481.15
+        },
+        {
+            "date": "2025-03-24",
+            "symbol": "IMTE",
+            "type": "Short",
+            "realized": -3162.71
+        },
+        {
+            "date": "2025-03-25",
+            "symbol": "DM",
+            "type": "Short",
+            "realized": -131.29
+        },
+        {
+            "date": "2025-03-25",
+            "symbol": "POAI",
+            "type": "Short",
+            "realized": 2302.28
+        },
+        {
+            "date": "2025-03-25",
+            "symbol": "TNON",
+            "type": "Short",
+            "realized": -133.18
+        },
+        {
+            "date": "2025-03-25",
+            "symbol": "DATS",
+            "type": "Short",
+            "realized": 1504.93
+        },
+        {
+            "date": "2025-03-26",
+            "symbol": "PTPI",
+            "type": "Short",
+            "realized": -2966.04
+        },
+        {
+            "date": "2025-03-26",
+            "symbol": "SURG",
+            "type": "Short",
+            "realized": 488.95
+        },
+        {
+            "date": "2025-03-26",
+            "symbol": "OSRH",
+            "type": "Short",
+            "realized": -1408.99
+        },
+        {
+            "date": "2025-03-27",
+            "symbol": "DRMA",
+            "type": "Short",
+            "realized": 1314.55
+        },
+        {
+            "date": "2025-03-27",
+            "symbol": "GTEC",
+            "type": "Short",
+            "realized": -573.77
+        },
+        {
+            "date": "2025-03-27",
+            "symbol": "LYT",
+            "type": "Short",
+            "realized": 484
         }
     ],
     "locates": [
@@ -2967,6 +3051,76 @@
             "date": "2025-03-17",
             "symbol": "NAOV",
             "totalCost": 85.25
+        },
+        {
+            "date": "2025-03-20",
+            "symbol": "SAG",
+            "totalCost": 67.31
+        },
+        {
+            "date": "2025-03-21",
+            "symbol": "ALUR",
+            "totalCost": 13.16
+        },
+        {
+            "date": "2025-03-24",
+            "symbol": "XHLD",
+            "totalCost": 89.5
+        },
+        {
+            "date": "2025-03-24",
+            "symbol": "IMTE",
+            "totalCost": 70.2
+        },
+        {
+            "date": "2025-03-25",
+            "symbol": "DM",
+            "totalCost": 0.195
+        },
+        {
+            "date": "2025-03-25",
+            "symbol": "POAI",
+            "totalCost": 16.208
+        },
+        {
+            "date": "2025-03-25",
+            "symbol": "TNON",
+            "totalCost": 41.125
+        },
+        {
+            "date": "2025-03-25",
+            "symbol": "DATS",
+            "totalCost": 12.9
+        },
+        {
+            "date": "2025-03-26",
+            "symbol": "PTPI",
+            "totalCost": 143.889
+        },
+        {
+            "date": "2025-03-26",
+            "symbol": "SURG",
+            "totalCost": 15.84
+        },
+        {
+            "date": "2025-03-26",
+            "symbol": "OSRH",
+            "totalCost": 128.6
+        },
+        {
+            "date": "2025-03-27",
+            "symbol": "DRMA",
+            "totalCost": 118.32
+        },
+        {
+            "date": "2025-03-27",
+            "symbol": "GTEC",
+            "totalCost": 116.72
+        },
+        {
+            "date": "2025-03-27",
+            "symbol": "LYT",
+            "totalCost": 138.5
         }
     ],
     "starting_balance": 75000
